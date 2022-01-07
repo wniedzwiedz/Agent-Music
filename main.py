@@ -7,7 +7,7 @@ from PyQt6.Qt6 import *
 import sys, time, random
 
 from external import fluidsynth
-from canvas import *
+from player import *
 
 
 class MainWindow(QWidget):
@@ -28,16 +28,27 @@ class MainWindow(QWidget):
         self.layout.addLayout(self.optionsLayout)
 
         print("Creating buttons...")
-        self.barLayout.addWidget(QPushButton("Play ▶"))
-        self.barLayout.addWidget(QPushButton("Stop ■"))
-        self.barLayout.addWidget(QCheckBox("Loop"))
+        play_button = QPushButton("Play ▶")
+        play_button.clicked.connect(self.playClicked)
+        self.barLayout.addWidget(play_button)
+        stop_button = QPushButton("Stop ■")
+        stop_button.clicked.connect(self.stopClicked)
+        self.barLayout.addWidget(stop_button)
+        self.loop_checkbox = QCheckBox("Loop")
+        self.barLayout.addWidget(self.loop_checkbox)
 
-        print("Creating canvas...")
-        self.canvas = Canvas()
-        self.layout.addWidget(self.canvas)
+        self.players = []
+        add_button = QPushButton("Add")
+        add_button.clicked.connect(self.createPlayer)
+        self.optionsLayout.addWidget(add_button)
 
         self.timer = QTimer()
         self.setTimer(400)
+
+    def createPlayer(self):
+        player = Player()
+        self.players.append(player)
+        self.layout.addWidget(player)
 
     def setTimer(self, ms):
         if not self.timer:
@@ -49,8 +60,17 @@ class MainWindow(QWidget):
         self.timer.timeout.connect(self.step)
         self.timer.start(ms)
 
+    def playClicked(self):
+        self.setTimer(400)
+        for player in self.players:
+            player.reset()
+
+    def stopClicked(self):
+        self.timer.stop()
+
     def step(self):
-        print("STEP")
+        for player in self.players:
+            player.step()
 
 app = QApplication(sys.argv)
 window = MainWindow()

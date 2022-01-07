@@ -8,6 +8,10 @@ from PyQt6.Qt6 import *
 class Canvas(QWidget):
     def __init__(self):
         super().__init__()
+        self.highlightedColumn = -1
+
+    def highlightColumn(self, col):
+        self.highlightedColumn = col
 
     def paintEvent(self, event):
         qp = QPainter()
@@ -27,6 +31,11 @@ class Canvas(QWidget):
 
         for y in range(0, cellsV):
             for x in range(0, cellsH):
+                if self.highlightedColumn == x:
+                    qp.setBrush(QColor(100, 100, 100))
+                else:
+                    qp.setBrush(QColor(0, 0, 0))
+
                 if random.random() < 0.4:
                     qp.drawRect(QRect(2 + x * cellWidth, 
                         2 + y * cellHeight, 
