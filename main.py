@@ -6,8 +6,7 @@ from PyQt6.Qt6 import *
 
 import sys
 
-class Canvas(QWidget):
-    pass
+from canvas import *
 
 class MainWindow(QWidget):
     def __init__(self):
