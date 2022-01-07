@@ -4,9 +4,10 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.Qt6 import *
 
-import sys
+import sys, time, random
 
 from canvas import *
+
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -34,7 +35,21 @@ class MainWindow(QWidget):
         self.canvas = Canvas()
         self.layout.addWidget(self.canvas)
 
+        self.timer = QTimer()
+        self.setTimer(400)
 
+    def setTimer(self, ms):
+        if not self.timer:
+            self.timer = QTimer()
+        try:
+            self.timer.timeout.disconnect()
+        except TypeError:
+            pass
+        self.timer.timeout.connect(self.step)
+        self.timer.start(ms)
+
+    def step(self):
+        print("STEP")
 
 app = QApplication(sys.argv)
 window = MainWindow()
