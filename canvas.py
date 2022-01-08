@@ -35,10 +35,10 @@ class Canvas(QWidget):
 
         qp.setFont(QFont('Decorative', max(2, cellHeight - 2)))
 
-        MARGIN = 1
+        MARGIN = 0
 
         for y in range(0, cellsV):
-            dy = MARGIN + y * cellHeight
+            dy = MARGIN + (cellsV - y - 1) * cellHeight
             for x in range(0, cellsH):
                 filled = False
                 if self.board:
@@ -47,9 +47,9 @@ class Canvas(QWidget):
 
                 if self.highlightedColumn == x:
                     if filled:
-                        qp.setBrush(QColor(40, 90, 60))
+                        qp.setBrush(QColor(40, 120, 60))
                     else:
-                        qp.setBrush(QColor(220, 200, 230))
+                        qp.setBrush(QColor(220, 200, 250))
                 else:
                     if filled:
                         qp.setBrush(QColor(0, 0, 0))
