@@ -83,10 +83,10 @@ if testFluidsynth:
     fs = fluidsynth.Synth()
     fs.start()
 
-    sfid = fs.sfload("example.sf2")
+    sfid = fs.sfload("soundfonts/Grand Piano.sf2")
     fs.program_select(0, sfid, 0, 0)
 
-    fs.noteon(0, 60, 30)
+    fs.noteon(0, 60, 300)
     fs.noteon(0, 67, 30)
     fs.noteon(0, 76, 30)
 

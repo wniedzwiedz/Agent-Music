@@ -19,6 +19,7 @@ class Player(Canvas):
 
     def reset(self):
         self.stepCounter = 0
+        self.highlightColumn(-1)
 
     def step(self):
         self.highlightColumn(self.stepCounter)

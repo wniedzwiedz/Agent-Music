@@ -21,8 +21,6 @@ class Canvas(QWidget):
         qp = QPainter()
         qp.begin(self)
         qp.setPen(QColor(168, 34, 3))
-        qp.setFont(QFont('Decorative', 10))
-        qp.drawText(event.rect(), 0, "Notes")     
         qp.drawRect(QRect(0, 0, self.size().width() - 1, self.size().height() - 1))
 
         qp.setPen(QColor(0, 0, 0))
@@ -30,12 +28,17 @@ class Canvas(QWidget):
 
         cellsH = len(self.board.notes)
         cellsV = 40
-        cellWidth = self.size().width() // cellsH
+        leftBorder = 60
+        width = self.size().width() - leftBorder
+        cellWidth = width // cellsH
         cellHeight = self.size().height() // cellsV
+
+        qp.setFont(QFont('Decorative', max(2, cellHeight - 2)))
 
         MARGIN = 1
 
         for y in range(0, cellsV):
+            dy = MARGIN + y * cellHeight
             for x in range(0, cellsH):
                 filled = False
                 if self.board:
@@ -52,8 +55,11 @@ class Canvas(QWidget):
                         qp.setBrush(QColor(0, 0, 0))
                     else:
                         qp.setBrush(QColor(255, 255, 255))
+                
+                dx = leftBorder + MARGIN + x * cellWidth
 
-                qp.drawRect(QRect(MARGIN + x * cellWidth, MARGIN + y * cellHeight, 
-                                  cellWidth - MARGIN, cellHeight - MARGIN))
+                qp.drawRect(QRect(dx, dy, cellWidth - MARGIN, cellHeight - MARGIN))
+
+            qp.drawText(QRect(MARGIN*2 - MARGIN, dy, leftBorder, cellHeight), 0x0082, str(80+y))
 
         qp.end()
