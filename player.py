@@ -22,7 +22,7 @@ class Player(Canvas):
 
         self.fs = fluidsynth.Synth()
         self.fs.start()
-        sfid = self.fs.sfload("soundfonts/Grand Piano.sf2")
+        sfid = self.fs.sfload("soundfonts/Full Grand Piano.sf2")
         self.fs.program_select(0, sfid, 0, 0)
 
         self.fs.cc(0, 7, 127)
@@ -48,7 +48,8 @@ class Player(Canvas):
 
 
     def play(self, col):
-        note = self.board.notes[col]
-        if note:
-            self.fs.noteoff(0, note.pitch)
-            self.fs.noteon(0, note.pitch, note.velocity)
+        notes = self.board.notes[col]
+        if len(notes) > 0:
+            for note in notes:
+                self.fs.noteoff(0, note.pitch)
+                self.fs.noteon(0, note.pitch, note.velocity)

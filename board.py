@@ -3,18 +3,20 @@ from cell import *
 
 class Board:
     def __init__(self):
+        # notes: [ column1 [ note1, note2 ], column2 [ note1 ], column3 [], ... ]
         self.notes = []
 
     def generateCells(self, length, rule):
         for i in range(length):
+            self.notes.append([])
             note = rule.evaluate(self.notes, i)
-            self.notes.append(note)
+            self.notes[i].append(note)
 
-    def getNote(self, x, y):
-        if x < 0 or x >= len(self.notes):
+    def getNote(self, col, pitch):
+        if col < 0 or col >= len(self.notes):
             return None
-        if self.notes[x].pitch == y:
-            return self.notes[x]
+        for n in self.notes[col]:
+            if n.pitch == pitch:
+                return n
         return None
 
-        
