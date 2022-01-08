@@ -43,7 +43,8 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(add_button)
 
         self.timer = QTimer()
-        self.setTimer(400)
+        self.setTimer(1000)
+        self.timer.stop()
 
     def createPlayer(self):
         player = Player()
@@ -61,7 +62,7 @@ class MainWindow(QWidget):
         self.timer.start(ms)
 
     def playClicked(self):
-        self.setTimer(400)
+        self.setTimer(60)
         for player in self.players:
             player.reset()
 
