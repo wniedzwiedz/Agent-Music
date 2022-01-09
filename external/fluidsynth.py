@@ -24,7 +24,7 @@
 
 from ctypes import *
 from ctypes.util import find_library
-import os
+import os, sys
 
 # A short circuited or expression to find the FluidSynth library
 # (mostly needed for Windows distributions of libfluidsynth supplied with QSynth)
@@ -39,9 +39,14 @@ lib = find_library('fluidsynth') or \
     find_library('libfluidsynth-3') or \
     find_library('libfluidsynth-2') or \
     find_library('libfluidsynth-1')
-    
+
 if lib is None:
-    raise ImportError("Couldn't find the FluidSynth library.")
+    if sys.platform == "win32":
+        lib = "libfluidsynth-3.dll"
+        print(f"Forcing {lib}...")
+        print(f"Put {lib} in the working directory.")
+    else:
+        raise("Couldn't find the FluidSynth library.")
 
 # Dynamically link the FluidSynth library
 # Architecture (32-/64-bit) must match your Python version
