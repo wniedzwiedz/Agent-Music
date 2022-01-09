@@ -54,9 +54,15 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Octave"))
         
         self.optionsInstrumentCombo = QComboBox()
-        for instrument in ['Piano']:
+        for instrument in ['Piano', 'Drums']:
             self.optionsInstrumentCombo.addItem(instrument)
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
+        self.optionsLayout.addWidget(QLabel("Instrument"))
+        
+        self.optionsRuleCombo = QComboBox()
+        for rule in ['Increase', 'Elementary', 'Melody']:
+            self.optionsRuleCombo.addItem(rule)
+        self.optionsLayout.addWidget(self.optionsRuleCombo)
         self.optionsLayout.addWidget(QLabel("Instrument"))
 
         self.players = []
@@ -74,6 +80,7 @@ class MainWindow(QWidget):
         options['scale'] = self.optionsScaleCombo.currentText()
         options['octave'] = self.optionsOctaveCombo.currentText()
         options['instrument'] = self.optionsInstrumentCombo.currentText()
+        options['rule'] = self.optionsRuleCombo.currentText()
         player = Player(options)
         self.players.append(player)
         self.layout.addWidget(player)
@@ -95,6 +102,8 @@ class MainWindow(QWidget):
 
     def stopClicked(self):
         self.timer.stop()
+        for player in self.players:
+            player.reset()
 
     def step(self):
         for player in self.players:

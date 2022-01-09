@@ -17,7 +17,17 @@ class Player(Canvas):
         print(f"Creating Player with {options}..")
         self.options = options
         self.stepCounter = 0
-        rule = IncreaseRule(base_pitch=80)
+        rule = None
+
+        if options.get("rule", "") == "Increase":
+            rule = IncreaseRule(base_pitch=20)
+        elif options.get("rule", "") == "Melody":
+            rule = MelodyRule(root_key=self.options['rootKey'],
+                            scale=self.options['scale'],
+                            octave=self.options['octave'])
+        if not rule:
+            raise Exception("Rule not specified!")
+
         board = Board()
         board.generateCells(40, rule)
         self.setBoard(board)
@@ -25,12 +35,21 @@ class Player(Canvas):
         self.fs = fluidsynth.Synth()
         self.fs.start()
 
-        if options.get("instrument", "") == "Piano":
-            sfid = self.fs.sfload("soundfonts/Full Grand Piano.sf2")
-        else:
-            raise Exception("Instrument not specified!")
+        path = ""
+        bank = -1
 
-        self.fs.program_select(0, sfid, 0, 0)
+        if options.get("instrument", "") == "Piano":
+            path = "soundfonts/Full Grand Piano.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Drums":
+            path = "soundfonts/GoldDrums.sf2"
+            bank = 0
+
+        if path == "" or bank < 0:
+            raise Exception("Instrument not specified!")
+            
+        sfid = self.fs.sfload(path)
+        self.fs.program_select(0, sfid, bank, 0)
 
         self.fs.cc(0, 7, 127)
 
@@ -41,7 +60,7 @@ class Player(Canvas):
     def reset(self):
         self.stepCounter = 0
         self.highlightColumn(-1)
-
+        self.update()
 
     def step(self):
         self.highlightColumn(self.stepCounter)
