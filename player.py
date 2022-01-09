@@ -56,6 +56,7 @@ class Player(Canvas):
         self.fs.program_select(0, sfid, bank, 0)
 
         self.fs.cc(0, 7, 127)
+        self.holdNotes = True
 
     def __del__(self):
         self.fs.delete()
@@ -78,8 +79,16 @@ class Player(Canvas):
 
 
     def play(self, col):
+        previousNotes = self.board.notes[col-1]
         notes = self.board.notes[col]
         if len(notes) > 0:
             for note in notes:
-                self.fs.noteoff(0, note.key)
-                self.fs.noteon(0, note.key, note.velocity)
+                sameNote = False
+                for prevNote in previousNotes:
+                    if prevNote.key == note.key:
+                        sameNote = True
+                        break
+
+                if not sameNote or not self.holdNotes:
+                    self.fs.noteoff(0, note.key)
+                    self.fs.noteon(0, note.key, note.velocity)
