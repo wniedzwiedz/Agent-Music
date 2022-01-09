@@ -31,7 +31,7 @@ class Player(Canvas):
             raise Exception("Rule not specified!")
 
         board = Board()
-        board.generateCells(100, rule)
+        board.generateCells(40, rule)
         self.setBoard(board)
 
         self.fs = fluidsynth.Synth()

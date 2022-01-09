@@ -11,7 +11,7 @@ class Rule:
 
 class IncreaseRule(Rule):
     def __init__(self, base_pitch):
-        self.base_pitch = base_pitch
+        self.base_key = base_key
         self.my_notes = []
 
     def evaluate(self, notes, current_index):
