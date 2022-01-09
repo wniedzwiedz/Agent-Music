@@ -10,7 +10,8 @@ class Board:
         for i in range(length):
             self.notes.append([])
             note = rule.evaluate(self.notes, i)
-            self.notes[i].append(note)
+            for n in note:
+                self.notes[i].append(n)
 
     def getNote(self, col, pitch):
         if col < 0 or col >= len(self.notes):

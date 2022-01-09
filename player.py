@@ -7,6 +7,7 @@ from PyQt6.Qt6 import *
 from canvas import *
 from board import *
 from rule import *
+from MelodyRule import *
 
 from external import fluidsynth
 

@@ -1,4 +1,5 @@
 from cell import *
+from MelodyRule import *
 
 class Rule:
   def __init__(self):
@@ -14,12 +15,12 @@ class IncreaseRule(Rule):
 
     def evaluate(self, notes, current_index):
         if current_index == 0 or len(notes) == 0:
-            return Cell(self.base_pitch)
-        previous = notes[current_index-1]
-        if len(previous) == 0:
-            return Cell(self.base_pitch)
-
-        return Cell(previous[0].pitch + 1) 
+            self.my_notes.append(Cell(self.base_pitch))
+            return self.my_notes
+        else:
+            previous = notes[current_index - 1]
+            self.my_notes.append(Cell(previous[0].pitch + 1)) 
+            return self.my_notes
 
 
 class ElemCARule(Rule):
