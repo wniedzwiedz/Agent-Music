@@ -5,6 +5,7 @@ from PyQt6.QtGui import *
 from PyQt6.Qt6 import *
 
 import sys, time, random
+from functools import partial
 
 from player import *
 
@@ -100,7 +101,22 @@ class MainWindow(QWidget):
         options['rule'] = self.optionsRuleCombo.currentText()
         player = Player(options)
         self.players.append(player)
+        removeButton = QPushButton("Remove")
+
+        def removePlayer(self, player, button):
+            print(f"Deleting {player} {button} for {self}")
+            self.players.remove(player)
+            self.layout.removeWidget(button)
+            self.layout.removeWidget(player)
+            player.deleteLater()
+            button.deleteLater()
+
+        myRemove = partial(removePlayer, self, player, removeButton)
+
+        removeButton.clicked.connect(myRemove)
+        self.layout.addWidget(removeButton)
         self.layout.addWidget(player)
+
 
     def setTimer(self, ms):
         if not self.timer:
