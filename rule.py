@@ -24,6 +24,23 @@ class IncreaseRule(Rule):
             self.my_notes.append(Cell(previous[0].key + 1)) 
             return self.my_notes
 
+class ABRule(Rule):
+    def __init__(self, base_key):
+        self.base_key = base_key
+        self.my_notes = []
+
+    def evaluate(self, notes, current_index):
+        self.my_notes = []
+        if current_index == 0 or len(notes) == 0:
+            self.my_notes.append(Cell(self.base_key))
+            return self.my_notes
+        elif current_index == 1 or len(notes) == 1:
+            self.my_notes.append(Cell((self.base_key)*2))
+            return self.my_notes
+        else:
+            previous = notes[current_index - 2]
+            self.my_notes.append(Cell(previous[0].key)) 
+            return self.my_notes
 
 class ElemCARule(Rule):
     def __init__(self, base_key, width, rule):

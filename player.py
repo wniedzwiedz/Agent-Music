@@ -27,8 +27,14 @@ class Player(Canvas):
             rule = MelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
                             octave=self.options['octave'])
+
         elif options.get("rule", "") == "Elementary":
             rule = ElemCARule(base_key=35, width=7, rule=163)
+            
+        elif options.get("rule", "") == "AB":
+            rule = ABRule(base_key=20)
+
+
         if not rule:
             raise Exception("Rule not specified!")
 

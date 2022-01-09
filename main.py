@@ -63,7 +63,7 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Instrument"))
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Increase', 'Elementary', 'Melody']:
+        for rule in ['Increase', 'Elementary', 'Melody', 'AB']:
             self.optionsRuleCombo.addItem(rule)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
         self.optionsLayout.addWidget(QLabel("Rule"))
