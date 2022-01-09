@@ -63,7 +63,7 @@ class MainWindow(QWidget):
         for rule in ['Increase', 'Elementary', 'Melody']:
             self.optionsRuleCombo.addItem(rule)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
-        self.optionsLayout.addWidget(QLabel("Instrument"))
+        self.optionsLayout.addWidget(QLabel("Rule"))
 
         self.players = []
         addButton = QPushButton("Add")
