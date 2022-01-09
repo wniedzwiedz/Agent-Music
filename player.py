@@ -12,8 +12,10 @@ from external import fluidsynth
 
 
 class Player(Canvas):
-    def __init__(self):
+    def __init__(self, options):
         super().__init__()
+        print(f"Creating Player with {options}..")
+        self.options = options
         self.stepCounter = 0
         rule = IncreaseRule(base_pitch=80)
         board = Board()
@@ -22,7 +24,12 @@ class Player(Canvas):
 
         self.fs = fluidsynth.Synth()
         self.fs.start()
-        sfid = self.fs.sfload("soundfonts/Full Grand Piano.sf2")
+
+        if options.get("instrument", "") == "Piano":
+            sfid = self.fs.sfload("soundfonts/Full Grand Piano.sf2")
+        else:
+            raise Exception("Instrument not specified!")
+
         self.fs.program_select(0, sfid, 0, 0)
 
         self.fs.cc(0, 7, 127)

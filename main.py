@@ -32,20 +32,49 @@ class MainWindow(QWidget):
         stop_button = QPushButton("Stop ■")
         stop_button.clicked.connect(self.stopClicked)
         self.barLayout.addWidget(stop_button)
-        self.loop_checkbox = QCheckBox("Loop")
-        self.barLayout.addWidget(self.loop_checkbox)
+        self.loopCheckbox = QCheckBox("Loop")
+        self.barLayout.addWidget(self.loopCheckbox)
+
+        self.optionsRootKeyCombo = QComboBox()
+        for key in ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']:
+            self.optionsRootKeyCombo.addItem(key)
+        self.optionsLayout.addWidget(self.optionsRootKeyCombo)
+        self.optionsLayout.addWidget(QLabel("Root key"))
+
+        self.optionsScaleCombo = QComboBox()
+        for scale in ['Major', 'minor']:
+            self.optionsScaleCombo.addItem(scale)
+        self.optionsLayout.addWidget(self.optionsScaleCombo)
+        self.optionsLayout.addWidget(QLabel("Scale"))
+
+        self.optionsOctaveCombo = QComboBox()
+        for octave in ['-5', '-4', '-3', '-2' ,'-1', '0', '1', '2', '3', '4', '5']:
+            self.optionsOctaveCombo.addItem(octave)
+        self.optionsLayout.addWidget(self.optionsOctaveCombo)
+        self.optionsLayout.addWidget(QLabel("Octave"))
+        
+        self.optionsInstrumentCombo = QComboBox()
+        for instrument in ['Piano']:
+            self.optionsInstrumentCombo.addItem(instrument)
+        self.optionsLayout.addWidget(self.optionsInstrumentCombo)
+        self.optionsLayout.addWidget(QLabel("Instrument"))
 
         self.players = []
-        add_button = QPushButton("Add")
-        add_button.clicked.connect(self.createPlayer)
-        self.optionsLayout.addWidget(add_button)
+        addButton = QPushButton("Add")
+        addButton.clicked.connect(self.createPlayer)
+        self.optionsLayout.addWidget(addButton)
 
         self.timer = QTimer()
         self.setTimer(1000)
         self.timer.stop()
 
     def createPlayer(self):
-        player = Player()
+        options = {}
+        options['rootKey'] = self.optionsRootKeyCombo.currentText()
+        options['scale'] = self.optionsScaleCombo.currentText()
+        options['octave'] = self.optionsOctaveCombo.currentText()
+        options['instrument'] = self.optionsInstrumentCombo.currentText()
+        player = Player(options)
         self.players.append(player)
         self.layout.addWidget(player)
 
