@@ -21,7 +21,10 @@ class Player(Canvas):
         rule = None
 
         if options.get("rule", "") == "Increase":
+<<<<<<< Updated upstream
             rule = IncreaseRule(base_key=20)
+=======
+>>>>>>> Stashed changes
         elif options.get("rule", "") == "Melody":
             rule = MelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
@@ -30,7 +33,7 @@ class Player(Canvas):
             raise Exception("Rule not specified!")
 
         board = Board()
-        board.generateCells(40, rule)
+        board.generateCells(100, rule)
         self.setBoard(board)
 
         self.fs = fluidsynth.Synth()

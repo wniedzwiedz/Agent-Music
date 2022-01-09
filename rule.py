@@ -10,8 +10,14 @@ class Rule:
 
 
 class IncreaseRule(Rule):
+<<<<<<< Updated upstream
     def __init__(self, base_key):
         self.base_key = base_key
+=======
+    def __init__(self, base_pitch):
+        self.base_pitch = base_pitch
+        self.my_notes = []
+>>>>>>> Stashed changes
 
     def evaluate(self, notes, current_index):
         self.my_notes = []
