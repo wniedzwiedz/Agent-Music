@@ -21,10 +21,8 @@ class Player(Canvas):
         rule = None
 
         if options.get("rule", "") == "Increase":
-<<<<<<< Updated upstream
             rule = IncreaseRule(base_key=20)
-=======
->>>>>>> Stashed changes
+            
         elif options.get("rule", "") == "Melody":
             rule = MelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
