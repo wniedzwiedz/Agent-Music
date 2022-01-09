@@ -34,6 +34,8 @@ class MainWindow(QWidget):
         self.barLayout.addWidget(stop_button)
         self.loopCheckbox = QCheckBox("Loop")
         self.barLayout.addWidget(self.loopCheckbox)
+        self.loopCheckbox.setChecked(True)
+        self.loopCheckbox.setEnabled(False)
 
         self.optionsRootKeyCombo = QComboBox()
         for key in ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']:
@@ -70,9 +72,24 @@ class MainWindow(QWidget):
         addButton.clicked.connect(self.createPlayer)
         self.optionsLayout.addWidget(addButton)
 
+        self.speedSlider = QSlider(Qt.Orientation.Horizontal)
+        self.speedSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.speedSlider.setPageStep(100)
+        self.speedSlider.setSingleStep(100)
+        self.speedSlider.setMinimum(300)
+        self.speedSlider.setMaximum(1200)
+        self.speedSlider.setTickInterval(10)
+        self.speedSlider.setMaximumWidth(100)
+        self.barLayout.addWidget(self.speedSlider)
+        self.speedLabel = QLabel("bpm")
+        self.barLayout.addWidget(self.speedLabel)
+        self.speedSlider.valueChanged.connect(self.speedSliderChanged)
+
         self.timer = QTimer()
         self.setTimer(1000)
         self.timer.stop()
+        self.speedSliderChanged()
+
 
     def createPlayer(self):
         options = {}
@@ -96,7 +113,7 @@ class MainWindow(QWidget):
         self.timer.start(ms)
 
     def playClicked(self):
-        self.setTimer(60)
+        self.speedSliderChanged()
         for player in self.players:
             player.reset()
 
@@ -104,6 +121,18 @@ class MainWindow(QWidget):
         self.timer.stop()
         for player in self.players:
             player.reset()
+
+    def speedSliderChanged(self):
+        val = self.speedSlider.value()
+        if not val:
+            return
+
+        bpm = (1000 * 60) // val
+        self.speedLabel.setText(f"{bpm:0.0f} bpm ({int(val):0.0f} ms)"),
+        if bpm > 0:
+            val = 1000 * 60 // bpm 
+        self.setTimer(int(val) )
+
 
     def step(self):
         for player in self.players:
