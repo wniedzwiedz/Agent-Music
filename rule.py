@@ -10,7 +10,7 @@ class Rule:
 
 
 class IncreaseRule(Rule):
-    def __init__(self, base_pitch):
+    def __init__(self, base_key):
         self.base_key = base_key
         self.my_notes = []
 
