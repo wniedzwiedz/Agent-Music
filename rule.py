@@ -10,22 +10,23 @@ class Rule:
 
 
 class IncreaseRule(Rule):
-    def __init__(self, base_pitch):
-        self.base_pitch = base_pitch
+    def __init__(self, base_key):
+        self.base_key = base_key
 
     def evaluate(self, notes, current_index):
+        self.my_notes = []
         if current_index == 0 or len(notes) == 0:
-            self.my_notes.append(Cell(self.base_pitch))
+            self.my_notes.append(Cell(self.base_key))
             return self.my_notes
         else:
             previous = notes[current_index - 1]
-            self.my_notes.append(Cell(previous[0].pitch + 1)) 
+            self.my_notes.append(Cell(previous[0].key + 1)) 
             return self.my_notes
 
 
 class ElemCARule(Rule):
-    def __init__(self, base_pitch, width, rule):
-        self.base_pitch = base_pitch
+    def __init__(self, base_key, width, rule):
+        self.base_key = base_key
         self.last_row = np.zeros((width), dtype = int)
         self.width = width
         self.notes = []
@@ -56,7 +57,7 @@ class ElemCARule(Rule):
         # First row always has one black cell in the middle 
         if current_index == 0 or len(notes) == 0:
             self.last_row[int(self.width/2)] = 1
-            self.notes.append(Cell(self.base_pitch))
+            self.notes.append(Cell(self.base_key))
             return self.notes
 
         bin_rule = "{0:{fill}8b}".format(self.rule, fill='0')
@@ -71,5 +72,5 @@ class ElemCARule(Rule):
         
         for i in range(0,self.width):
             if self.last_row[i]==1:
-                self.notes.append(Cell(int(self.base_pitch-self.width/2+2*i)))
+                self.notes.append(Cell(int(self.base_key-self.width/2+2*i)))
         return self.notes 

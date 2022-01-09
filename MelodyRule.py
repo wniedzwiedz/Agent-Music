@@ -45,7 +45,7 @@ class MelodyRule():
 		else:
 			rnd = random.randint(-2, 6)
 			previous = notes[current_index-1]
-			previous_root = previous[0].pitch
+			previous_root = previous[0].key
 			while MelodyRule.getKey(self.root_key,self.octave,self.scale,rnd) == previous_root:
 				rnd = random.randint(0, 6)
 			for i in range(rnd, rnd + 6, 2):

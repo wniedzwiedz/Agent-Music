@@ -13,11 +13,11 @@ class Board:
             for n in note:
                 self.notes[i].append(n)
 
-    def getNote(self, col, pitch):
+    def getNote(self, col, key):
         if col < 0 or col >= len(self.notes):
             return None
         for n in self.notes[col]:
-            if n.pitch == pitch:
+            if n.key == key:
                 return n
         return None
 

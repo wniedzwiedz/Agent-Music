@@ -21,7 +21,7 @@ class Player(Canvas):
         rule = None
 
         if options.get("rule", "") == "Increase":
-            rule = IncreaseRule(base_pitch=20)
+            rule = IncreaseRule(base_key=20)
         elif options.get("rule", "") == "Melody":
             rule = MelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
@@ -78,5 +78,5 @@ class Player(Canvas):
         notes = self.board.notes[col]
         if len(notes) > 0:
             for note in notes:
-                self.fs.noteoff(0, note.pitch)
-                self.fs.noteon(0, note.pitch, note.velocity)
+                self.fs.noteoff(0, note.key)
+                self.fs.noteon(0, note.key, note.velocity)

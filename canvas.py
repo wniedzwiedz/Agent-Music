@@ -26,8 +26,11 @@ class Canvas(QWidget):
         qp.setPen(QColor(0, 0, 0))
         qp.setBrush(QColor(0, 0, 0))
 
+        CELLS_VERTICAL_SPAN = 60
+        CELLS_VERTICAL_MIN = 80
+
         cellsH = len(self.board.notes)
-        cellsV = 40
+        cellsV = CELLS_VERTICAL_SPAN
         leftBorder = 60
         width = self.size().width() - leftBorder
         cellWidth = width // cellsH
@@ -42,7 +45,7 @@ class Canvas(QWidget):
             for x in range(0, cellsH):
                 filled = False
                 if self.board:
-                    if self.board.getNote(x, 80+y):
+                    if self.board.getNote(x, CELLS_VERTICAL_MIN+y):
                         filled = True
 
                 if self.highlightedColumn == x:
@@ -60,6 +63,6 @@ class Canvas(QWidget):
 
                 qp.drawRect(QRect(dx, dy, cellWidth - MARGIN, cellHeight - MARGIN))
 
-            qp.drawText(QRect(MARGIN*2 - MARGIN, dy, leftBorder, cellHeight), 0x0082, str(80+y))
+            qp.drawText(QRect(MARGIN*2 - MARGIN, dy, leftBorder, cellHeight), 0x0082, str(CELLS_VERTICAL_MIN+y))
 
         qp.end()
