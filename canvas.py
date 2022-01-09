@@ -26,8 +26,8 @@ class Canvas(QWidget):
         qp.setPen(QColor(0, 0, 0))
         qp.setBrush(QColor(0, 0, 0))
 
-        CELLS_VERTICAL_SPAN = 60
-        CELLS_VERTICAL_MIN = 80
+        CELLS_VERTICAL_SPAN = abs(self.board.highestKey - self.board.lowestKey)
+        CELLS_VERTICAL_MIN = self.board.lowestKey
 
         cellsH = len(self.board.notes)
         cellsV = CELLS_VERTICAL_SPAN
