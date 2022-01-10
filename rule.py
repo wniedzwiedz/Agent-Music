@@ -98,3 +98,18 @@ class ElemCARule(Rule):
             if self.last_row[i]==1:
                 self.notes.append(Cell(int(self.base_key-self.width/2+2*i)))
         return self.notes 
+
+
+class CombineRule(Rule):
+    def __init__(self, rules):
+        self.length = len(rules)
+        self.my_notes = []
+
+    def evaluate(self, notes, current_index):
+        self.my_notes = []
+        value=0
+        for rule in self.rules:
+            value=value+rule.evaluate(self.my_notes,current_index)
+        value=value/self.length
+        self.my_notes.append(Cell(value)) 
+        return self.my_notes
