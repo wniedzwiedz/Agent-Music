@@ -31,16 +31,22 @@ class ABRule(Rule):
 
     def evaluate(self, notes, current_index):
         self.my_notes = []
+        #First note of a melody
         if current_index == 0 or len(notes) == 0:
             self.my_notes.append(Cell(self.base_key))
             return self.my_notes
+        #Second note of a melody
         elif current_index == 1 or len(notes) == 1:
-            self.my_notes.append(Cell((self.base_key)*2))
             return self.my_notes
+        #Rest
         else:
-            previous = notes[current_index - 2]
-            self.my_notes.append(Cell(previous[0].key)) 
-            return self.my_notes
+            previous = notes[current_index - 1]
+            if previous:
+                return self.my_notes
+            else:
+                preprevious = notes[current_index - 2]
+                self.my_notes.append(Cell(preprevious[0].key)) 
+                return self.my_notes
 
 class ElemCARule(Rule):
     def __init__(self, base_key, width, rule):

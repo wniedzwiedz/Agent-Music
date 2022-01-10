@@ -12,18 +12,21 @@ class Board:
         for i in range(length):
             self.notes.append([])
             columnNotes = rule.evaluate(self.notes, i)
-            for n in columnNotes:
-                if not self.lowestKey:
-                    self.lowestKey = n.key
-                if not self.highestKey:
-                    self.highestKey = n.key + 1
+            if not columnNotes:
+                continue
+            else:
+                for n in columnNotes:
+                    if not self.lowestKey:
+                        self.lowestKey = n.key
+                    if not self.highestKey:
+                        self.highestKey = n.key + 1
 
-                if n.key < self.lowestKey:
-                    self.lowestKey = n.key
-                if n.key > self.highestKey:
-                    self.highestKey = n.key
+                    if n.key < self.lowestKey:
+                        self.lowestKey = n.key
+                    if n.key > self.highestKey:
+                        self.highestKey = n.key 
 
-                self.notes[i].append(n)
+                    self.notes[i].append(n)
 
     def getNote(self, col, key):
         if col < 0 or col >= len(self.notes):

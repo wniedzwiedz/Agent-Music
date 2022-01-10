@@ -42,7 +42,7 @@ class MelodyRule():
 			for i in range(rnd, rnd + 6, 2):
 				self.my_notes.append(Cell(MelodyRule.getKey(self.root_key,self.octave,self.scale,i)))
 			return self.my_notes
-		else:
+		elif current_index % 4 == 0:
 			rnd = random.randint(-2, 6)
 			previous = notes[current_index-1]
 			previous_root = previous[0].key
@@ -50,4 +50,7 @@ class MelodyRule():
 				rnd = random.randint(0, 6)
 			for i in range(rnd, rnd + 6, 2):
 				self.my_notes.append(Cell(MelodyRule.getKey(self.root_key,self.octave,self.scale,i)))
+			return self.my_notes
+		else:
+			self.my_notes = notes[current_index - 1]
 			return self.my_notes

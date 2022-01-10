@@ -32,7 +32,7 @@ class Player(Canvas):
             rule = ElemCARule(base_key=35, width=7, rule=163)
             
         elif options.get("rule", "") == "AB":
-            rule = ABRule(base_key=20)
+            rule = ABRule(base_key=44)
 
 
         if not rule:
