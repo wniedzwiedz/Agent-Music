@@ -18,6 +18,32 @@ class Canvas(QWidget):
     def setBoard(self, board):
         self.board = board
 
+    def verticalCells(self):
+        return abs(self.board.highestKey - self.board.lowestKey + 1)
+
+    def horizontalCells(self):
+        return len(self.board.notes)
+
+    def getLeftBorder(self):
+        return 60
+
+    def getCellWidth(self):
+        width = self.size().width() - self.getLeftBorder()
+        return width // self.horizontalCells()
+
+    def getCellHeight(self):
+        return self.size().height() // self.verticalCells()
+
+    def getCellPosition(self, x, y):
+        dx = self.getLeftBorder() + x * self.getCellWidth()
+        dy = (self.verticalCells() - y - 1) * self.getCellHeight()
+        return dx, dy
+
+    def getCellWindowPosition(self, dx, dy):
+        x = (-self.getLeftBorder() + dx) // self.getCellWidth()
+        y = (self.verticalCells() - 1 - dy) // self.getCellHeight()
+        return x, y
+
     def paintEvent(self, event):
         qp = QPainter()
         qp.begin(self)
@@ -26,27 +52,14 @@ class Canvas(QWidget):
 
         qp.setPen(QColor(0, 0, 0))
         qp.setBrush(QColor(0, 0, 0))
+        qp.setFont(QFont('Decorative', max(2, self.getCellHeight() - 2)))
 
-        CELLS_VERTICAL_SPAN = abs(self.board.highestKey - self.board.lowestKey + 1)
-        CELLS_VERTICAL_MIN = self.board.lowestKey
-
-        cellsH = len(self.board.notes)
-        cellsV = CELLS_VERTICAL_SPAN
-        leftBorder = 60
-        width = self.size().width() - leftBorder
-        cellWidth = width // cellsH
-        cellHeight = self.size().height() // cellsV
-
-        qp.setFont(QFont('Decorative', max(2, cellHeight - 2)))
-
-        MARGIN = 0
-
-        for y in range(0, cellsV):
-            dy = MARGIN + (cellsV - y - 1) * cellHeight
-            for x in range(0, cellsH):
+        for y in range(0, self.verticalCells()):
+            for x in range(0, self.horizontalCells()):
+                keyNumber = self.board.lowestKey+y
                 filled = False
                 if self.board:
-                    if self.board.getNote(x, CELLS_VERTICAL_MIN+y):
+                    if self.board.getNote(x, keyNumber):
                         filled = True
 
                 if self.highlightedColumn == x:
@@ -60,10 +73,11 @@ class Canvas(QWidget):
                     else:
                         qp.setBrush(QColor(255, 255, 255))
                 
-                dx = leftBorder + MARGIN + x * cellWidth
 
-                qp.drawRect(QRect(dx, dy, cellWidth - MARGIN, cellHeight - MARGIN))
-
-            qp.drawText(QRect(MARGIN*2 - MARGIN, dy, leftBorder, cellHeight), 0x0082, str(CELLS_VERTICAL_MIN+y))
+                dx, dy = self.getCellPosition(x, y)
+                qp.drawRect(QRect(dx, dy, self.getCellWidth(), self.getCellHeight()))
+            qp.drawText(QRect(0, dy, 
+                              self.getLeftBorder(), self.getCellHeight()), 
+                              0x0082, str(keyNumber))
 
         qp.end()
