@@ -96,7 +96,7 @@ class Player(Canvas):
                         sameNote = True
                         break
 
-                if not sameNote or not self.holdNotes:
+                if not sameNote or not self.holdNotes or col == 0:
                     self.fs.noteoff(0, note.key)
                     self.fs.noteon(0, note.key, note.velocity)
 
