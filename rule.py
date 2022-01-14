@@ -1,5 +1,5 @@
 from cell import *
-from MelodyRule import *
+from ChordMelodyRule import *
 
 class Rule:
   def __init__(self):

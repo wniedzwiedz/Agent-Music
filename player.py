@@ -7,7 +7,7 @@ from PyQt6.Qt6 import *
 from canvas import *
 from board import *
 from rule import *
-from MelodyRule import *
+from ChordMelodyRule import *
 
 from external import fluidsynth
 
@@ -23,8 +23,8 @@ class Player(Canvas):
         if options.get("rule", "") == "Increase":
             rule = IncreaseRule(base_key=20)
             
-        elif options.get("rule", "") == "Melody":
-            rule = MelodyRule(root_key=self.options['rootKey'],
+        elif options.get("rule", "") == "Chord Melody":
+            rule = ChordMelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
                             octave=self.options['octave'])
 
@@ -39,7 +39,7 @@ class Player(Canvas):
             raise Exception("Rule not specified!")
 
         board = Board()
-        board.generateCells(40, rule)
+        board.generateCells(100, rule)
         self.setBoard(board)
 
         self.fs = fluidsynth.Synth()
@@ -48,11 +48,29 @@ class Player(Canvas):
         path = ""
         bank = -1
 
-        if options.get("instrument", "") == "Piano":
+        if options.get("instrument", "") == "Grand Piano":
             path = "soundfonts/Full Grand Piano.sf2"
             bank = 0
         elif options.get("instrument", "") == "Drums":
             path = "soundfonts/GoldDrums.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Drama Piano":
+            path = "soundfonts/Drama Piano.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "FM Piano":
+            path = "soundfonts/FM Piano.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Korg Piano":
+            path = "soundfonts/Korg Triniton Piano.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Piano Bass":
+            path = "soundfonts/Piano Bass.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Stereo Piano":
+            path = "soundfonts/Stereo Piano.sf2"
+            bank = 0
+        elif options.get("instrument", "") == "Tight Piano":
+            path = "soundfonts/Tight Piano.sf2"
             bank = 0
 
         if path == "" or bank < 0:

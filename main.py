@@ -57,13 +57,13 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Octave"))
         
         self.optionsInstrumentCombo = QComboBox()
-        for instrument in ['Piano', 'Drums']:
+        for instrument in ['Grand Piano', 'Drums', 'Drama Piano', 'FM Piano', 'Korg Piano', 'Piano Bass', 'Stereo Piano', 'Tight Piano']:
             self.optionsInstrumentCombo.addItem(instrument)
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
         self.optionsLayout.addWidget(QLabel("Instrument"))
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Increase', 'Elementary', 'Melody', 'AB']:
+        for rule in ['Increase', 'Elementary', 'Chord Melody', 'AB']:
             self.optionsRuleCombo.addItem(rule)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
         self.optionsLayout.addWidget(QLabel("Rule"))
