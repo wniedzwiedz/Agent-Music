@@ -1,6 +1,6 @@
 import random
 
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QMainWindow
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QMainWindow, QSizePolicy
 from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QPainter, QColor, QFont
 from PyQt6.Qt6 import *
@@ -10,6 +10,7 @@ class Canvas(QWidget):
         super().__init__()
         self.highlightedColumn = -1
         self.board = None
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
     def highlightColumn(self, col):
         self.highlightedColumn = col

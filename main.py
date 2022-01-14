@@ -25,6 +25,11 @@ class MainWindow(QWidget):
         self.layout.addLayout(self.barLayout)
         self.optionsLayout = QHBoxLayout()
         self.layout.addLayout(self.optionsLayout)
+        self.combineRuleLayout = QHBoxLayout()
+        self.layout.addLayout(self.combineRuleLayout)
+        self.combineRuleRulesLayout = QHBoxLayout()
+        self.combineRuleLayout.addLayout(self.combineRuleRulesLayout)
+        self.combineRuleLayout.addStretch()
 
         print("Creating buttons...")
         play_button = QPushButton("Play ▶")
@@ -38,6 +43,7 @@ class MainWindow(QWidget):
         self.loopCheckbox.setChecked(True)
         self.loopCheckbox.setEnabled(False)
 
+        print("Creating options...")
         self.optionsRootKeyCombo = QComboBox()
         for key in ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']:
             self.optionsRootKeyCombo.addItem(key)
@@ -85,6 +91,8 @@ class MainWindow(QWidget):
         self.speedLabel = QLabel("bpm")
         self.barLayout.addWidget(self.speedLabel)
         self.speedSlider.valueChanged.connect(self.speedSliderChanged)
+
+        self.layout.addStretch(-1)
 
         self.timer = QTimer()
         self.setTimer(1000)
