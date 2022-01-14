@@ -109,7 +109,7 @@ class MainWindow(QWidget):
         self.combineRuleRulesCombo = self.copyCombo(self.optionsRuleCombo)
         self.combineRuleRulesLayout.addWidget(self.combineRuleRulesCombo)
 
-        # if default option is not "Combine"
+        # if default (current) option is not "Combine"
         if self.optionsRuleCombo.currentText != "Combine":
             self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
             self.layoutSetChildrenVisible(self.combineRuleLayout, False)

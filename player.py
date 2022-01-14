@@ -14,6 +14,17 @@ from external import fluidsynth
 
 class Player(Canvas):
 
+    INSTRUMENTS = {
+            'Grand Piano': "soundfonts/Full Grand Piano.sf2",
+            'Drama Piano': "soundfonts/Drama Piano.sf2",
+            'FM Piano': "soundfonts/FM Piano.sf2",
+            'Korg Triniton Piano': "soundfonts/Korg Triniton Piano.SF2",
+            'Reverb Bell Piano': "soundfonts/Reverb Bell Piano.sf2",
+            'Stereo Piano': "soundfonts/Stereo Piano.sf2",
+            'Tight Piano': "soundfonts/Tight Piano.sf2",
+            'Drums': "soundfonts/GoldDrums.sf2"
+    }
+
     def __init__(self, options):
         super().__init__()
         print(f"Creating Player with {options}..")
@@ -37,15 +48,15 @@ class Player(Canvas):
         path = ""
         bank = -1
 
-        if options.get("instrument", "") == "Piano":
-            path = "soundfonts/Full Grand Piano.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Drums":
-            path = "soundfonts/GoldDrums.sf2"
+        if not "instrument" in options:
+            raise Exception("Instrument not specified")
+
+        if options.get("instrument", "") != "":
+            path = Player.INSTRUMENTS[options.get("instrument")]
             bank = 0
 
         if path == "" or bank < 0:
-            raise Exception("Instrument not specified!")
+            raise Exception("Instrument not found!")
             
         sfid = self.fs.sfload(path)
         self.fs.program_select(0, sfid, bank, 0)
@@ -93,8 +104,8 @@ class Player(Canvas):
     def getRule(self, name, options):
         if name == "Increase":
             return IncreaseRule(base_key=20)
-        elif name == "Melody":
-            return MelodyRule(root_key=self.options['rootKey'],
+        elif name == "Chord Melody":
+            return ChordMelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
                             octave=self.options['octave'])
         elif name == "Elementary":
