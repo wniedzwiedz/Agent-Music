@@ -19,7 +19,6 @@ class Player(Canvas):
             'Drama Piano': "soundfonts/Drama Piano.sf2",
             'FM Piano': "soundfonts/FM Piano.sf2",
             'Korg Triniton Piano': "soundfonts/Korg Triniton Piano.SF2",
-            'Reverb Bell Piano': "soundfonts/Reverb Bell Piano.sf2",
             'Stereo Piano': "soundfonts/Stereo Piano.sf2",
             'Tight Piano': "soundfonts/Tight Piano.sf2",
             'Drums': "soundfonts/GoldDrums.sf2"
