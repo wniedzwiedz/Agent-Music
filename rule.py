@@ -102,6 +102,7 @@ class ElemCARule(Rule):
 
 class CombineRule(Rule):
     def __init__(self, rules):
+        self.rules = rules
         self.length = len(rules)
         self.my_notes = []
 
@@ -109,7 +110,7 @@ class CombineRule(Rule):
         self.my_notes = []
         value=0
         for rule in self.rules:
-            value=value+rule.evaluate(self.my_notes,current_index)
+            value = value+rule.evaluate(self.my_notes,current_index)
         value=value/self.length
         self.my_notes.append(Cell(value)) 
         return self.my_notes

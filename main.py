@@ -28,9 +28,8 @@ class MainWindow(QWidget):
         self.combineRuleLayout = QHBoxLayout()
         self.layout.addLayout(self.combineRuleLayout)
         self.combineRuleRulesLayout = QHBoxLayout()
-        self.combineRuleLayout.addLayout(self.combineRuleRulesLayout)
-        self.combineRuleLayout.addStretch()
 
+        # Bar & Buttons 
         print("Creating buttons...")
         play_button = QPushButton("Play ▶")
         play_button.clicked.connect(self.playClicked)
@@ -43,6 +42,20 @@ class MainWindow(QWidget):
         self.loopCheckbox.setChecked(True)
         self.loopCheckbox.setEnabled(False)
 
+        self.speedSlider = QSlider(Qt.Orientation.Horizontal)
+        self.speedSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.speedSlider.setPageStep(100)
+        self.speedSlider.setSingleStep(100)
+        self.speedSlider.setMinimum(300)
+        self.speedSlider.setMaximum(1200)
+        self.speedSlider.setTickInterval(10)
+        self.speedSlider.setMaximumWidth(100)
+        self.barLayout.addWidget(self.speedSlider)
+        self.speedLabel = QLabel("bpm")
+        self.barLayout.addWidget(self.speedLabel)
+        self.speedSlider.valueChanged.connect(self.speedSliderChanged)
+
+        # Options
         print("Creating options...")
         self.optionsRootKeyCombo = QComboBox()
         for key in ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']:
@@ -63,36 +76,51 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Octave"))
         
         self.optionsInstrumentCombo = QComboBox()
-        for instrument in ['Grand Piano', 'Drums', 'Drama Piano', 'FM Piano', 'Korg Piano', 'Piano Bass', 'Stereo Piano', 'Tight Piano']:
-            self.optionsInstrumentCombo.addItem(instrument)
+        self.optionsInstrumentCombo.addItems(Player.INSTRUMENTS.keys())
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
         self.optionsLayout.addWidget(QLabel("Instrument"))
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Increase', 'Elementary', 'Chord Melody', 'AB']:
+        for rule in ['Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
             self.optionsRuleCombo.addItem(rule)
+        self.optionsRuleCombo.currentTextChanged.connect(self.ruleComboChanged)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
         self.optionsLayout.addWidget(QLabel("Rule"))
 
+
+        # Combine Rule Layout & Combine Rule Rules Layout
+        self.combineRuleLayout.addWidget(QLabel("Rules to combine:"))
+        self.combineRuleLayout.addLayout(self.combineRuleRulesLayout)
+        self.combineRuleLayout.addStretch()
+        
+        # add the same rules to Combine Rule Options
+        combineRuleRemoveRule = QPushButton("-")
+        combineRuleRemoveRule.setMaximumSize(QSize(24, 24))
+        combineRuleRemoveRule.clicked.connect(lambda :  
+            self.removeLastItem(self.combineRuleRulesLayout)
+        )
+        self.combineRuleLayout.addWidget(combineRuleRemoveRule)
+        combineRuleAddRule = QPushButton("+")
+        combineRuleAddRule.setMaximumSize(QSize(24, 24))
+        combineRuleAddRule.clicked.connect(lambda :  
+            self.combineRuleRulesLayout.addWidget(self.copyCombo(self.optionsRuleCombo))
+        )
+        self.combineRuleLayout.addWidget(combineRuleAddRule)
+        self.combineRuleRulesCombo = self.copyCombo(self.optionsRuleCombo)
+        self.combineRuleRulesLayout.addWidget(self.combineRuleRulesCombo)
+
+        # if default option is not "Combine"
+        if self.optionsRuleCombo.currentText != "Combine":
+            self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
+            self.layoutSetChildrenVisible(self.combineRuleLayout, False)
+
+        # Audio players
         self.players = []
         addButton = QPushButton("Add")
         addButton.clicked.connect(self.createPlayer)
         self.optionsLayout.addWidget(addButton)
 
-        self.speedSlider = QSlider(Qt.Orientation.Horizontal)
-        self.speedSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.speedSlider.setPageStep(100)
-        self.speedSlider.setSingleStep(100)
-        self.speedSlider.setMinimum(300)
-        self.speedSlider.setMaximum(1200)
-        self.speedSlider.setTickInterval(10)
-        self.speedSlider.setMaximumWidth(100)
-        self.barLayout.addWidget(self.speedSlider)
-        self.speedLabel = QLabel("bpm")
-        self.barLayout.addWidget(self.speedLabel)
-        self.speedSlider.valueChanged.connect(self.speedSliderChanged)
-
-        self.layout.addStretch(-1)
+        self.layout.addStretch()
 
         self.timer = QTimer()
         self.setTimer(1000)
@@ -107,6 +135,10 @@ class MainWindow(QWidget):
         options['octave'] = self.optionsOctaveCombo.currentText()
         options['instrument'] = self.optionsInstrumentCombo.currentText()
         options['rule'] = self.optionsRuleCombo.currentText()
+        options['rules'] = [ 
+            item.widget().currentText() for item in self.layoutItems(self.combineRuleRulesLayout) 
+        ]
+        print(options)
         player = Player(options)
         self.players.append(player)
         removeButton = QPushButton("Remove")
@@ -157,10 +189,45 @@ class MainWindow(QWidget):
             val = 1000 * 60 // bpm 
         self.setTimer(int(val) )
 
+    def ruleComboChanged(self, rule):
+        print(self.combineRuleLayout)
+        if rule == "Combine":
+            self.layoutSetChildrenVisible(self.combineRuleLayout, True)
+            self.layoutSetChildrenVisible(self.combineRuleRulesLayout, True)
+        else:
+            self.layoutSetChildrenVisible(self.combineRuleLayout, False)
+            self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
 
     def step(self):
         for player in self.players:
             player.step()
+
+    def copyCombo(self, combo):
+        newCombo = QComboBox()
+        for i in range(combo.count()):
+            newCombo.addItem(combo.itemText(i))
+        return newCombo
+
+    def layoutSetChildrenVisible(self, layout, visible = True):
+        for i in range(layout.count()):
+            ch = layout.itemAt(i)
+            if ch.widget():
+                ch.widget().setVisible(visible)
+
+    def removeLastItem(self, layout):
+        if layout.count() <= 0:
+            return
+
+        item = layout.itemAt(layout.count() - 1)
+        if item.widget():
+            item.widget().deleteLater()
+        layout.removeItem(item)
+
+    def layoutItems(self, layout):
+        items = []
+        for i in range(layout.count()):
+            items.append(layout.itemAt(i))
+        return items
 
 app = QApplication(sys.argv)
 window = MainWindow()

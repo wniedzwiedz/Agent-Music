@@ -13,30 +13,19 @@ from external import fluidsynth
 
 
 class Player(Canvas):
+
     def __init__(self, options):
         super().__init__()
         print(f"Creating Player with {options}..")
         self.options = options
         self.stepCounter = 0
-        rule = None
+        if not "rule" in options:
+            raise Exception("Rule not specified!")
 
-        if options.get("rule", "") == "Increase":
-            rule = IncreaseRule(base_key=20)
-            
-        elif options.get("rule", "") == "Chord Melody":
-            rule = ChordMelodyRule(root_key=self.options['rootKey'],
-                            scale=self.options['scale'],
-                            octave=self.options['octave'])
-
-        elif options.get("rule", "") == "Elementary":
-            rule = ElemCARule(base_key=35, width=7, rule=163)
-            
-        elif options.get("rule", "") == "AB":
-            rule = ABRule(base_key=44)
-
+        rule = self.getRule(options.get("rule"), options)
 
         if not rule:
-            raise Exception("Rule not specified!")
+            raise Exception("Specified rule not found!")
 
         board = Board()
         board.generateCells(100, rule)
@@ -48,29 +37,11 @@ class Player(Canvas):
         path = ""
         bank = -1
 
-        if options.get("instrument", "") == "Grand Piano":
+        if options.get("instrument", "") == "Piano":
             path = "soundfonts/Full Grand Piano.sf2"
             bank = 0
         elif options.get("instrument", "") == "Drums":
             path = "soundfonts/GoldDrums.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Drama Piano":
-            path = "soundfonts/Drama Piano.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "FM Piano":
-            path = "soundfonts/FM Piano.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Korg Piano":
-            path = "soundfonts/Korg Triniton Piano.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Piano Bass":
-            path = "soundfonts/Piano Bass.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Stereo Piano":
-            path = "soundfonts/Stereo Piano.sf2"
-            bank = 0
-        elif options.get("instrument", "") == "Tight Piano":
-            path = "soundfonts/Tight Piano.sf2"
             bank = 0
 
         if path == "" or bank < 0:
@@ -82,6 +53,7 @@ class Player(Canvas):
         self.fs.cc(0, 7, 127)
         self.holdNotes = True
 
+
     def __del__(self):
         self.fs.delete()
 
@@ -90,6 +62,7 @@ class Player(Canvas):
         self.stepCounter = 0
         self.highlightColumn(-1)
         self.update()
+
 
     def step(self):
         self.highlightColumn(self.stepCounter)
@@ -116,3 +89,21 @@ class Player(Canvas):
                 if not sameNote or not self.holdNotes:
                     self.fs.noteoff(0, note.key)
                     self.fs.noteon(0, note.key, note.velocity)
+
+    def getRule(self, name, options):
+        if name == "Increase":
+            return IncreaseRule(base_key=20)
+        elif name == "Melody":
+            return MelodyRule(root_key=self.options['rootKey'],
+                            scale=self.options['scale'],
+                            octave=self.options['octave'])
+        elif name == "Elementary":
+            return ElemCARule(base_key=35, width=7, rule=163)
+        elif name == "AB":
+            return ABRule(base_key=44)
+        elif name == "Combine":
+            rules = [ self.getRule(rn, options) for rn in options["rules"] ]
+            return CombineRule(rules)
+
+        return None
+
