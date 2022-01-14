@@ -78,6 +78,11 @@ class MainWindow(QWidget):
         self.optionsInstrumentCombo = QComboBox()
         self.optionsInstrumentCombo.addItems(Player.INSTRUMENTS.keys())
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
+        self.drumsCombo = QComboBox()
+        self.drumsCombo.addItems(["Snare", "Kick", "Hi-Hat", "Bass"])
+        self.drumsCombo.setVisible(False)
+        self.optionsLayout.addWidget(self.drumsCombo)
+        self.optionsInstrumentCombo.currentTextChanged.connect(self.instrumentComboChanged)
         self.optionsLayout.addWidget(QLabel("Instrument"))
         
         self.optionsRuleCombo = QComboBox()
@@ -138,6 +143,8 @@ class MainWindow(QWidget):
         options['rules'] = [ 
             item.widget().currentText() for item in self.layoutItems(self.combineRuleRulesLayout) 
         ]
+        options['percussion'] = self.drumsCombo.currentText()
+
         print(options)
         player = Player(options)
         self.players.append(player)
@@ -197,6 +204,13 @@ class MainWindow(QWidget):
         else:
             self.layoutSetChildrenVisible(self.combineRuleLayout, False)
             self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
+
+    def instrumentComboChanged(self, instrument):
+        print(instrument)
+        if instrument == "Drums":
+            self.drumsCombo.setVisible(True)
+        else:
+            self.drumsCombo.setVisible(False)
 
     def step(self):
         for player in self.players:
