@@ -48,12 +48,12 @@ class ChordMelodyRule():
 			return self.my_notes
 		elif self.chord_length_counter % self.chord_length == 0:
 			self.chord_length_counter = 1
-			rnd = random.randint(0, 6)
-			self.chord_length = random.randint(2,8)
+			rnd = random.randint(-2, 6)
+			self.chord_length = random.randint(1,3)
 			previous = notes[current_index - 1]
 			previous_root = previous[0].key
 			while ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd) == previous_root:
-				rnd = random.randint(0, 6)
+				rnd = random.randint(-2, 6)
 			for i in range(rnd, rnd + 6, 2):
 				self.my_notes.append(Cell(ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,i)))
 			return self.my_notes

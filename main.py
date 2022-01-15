@@ -79,14 +79,42 @@ class MainWindow(QWidget):
         self.optionsInstrumentCombo.addItems(Player.INSTRUMENTS.keys())
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
         self.drumsCombo = QComboBox()
-        self.drumsCombo.addItems(["Snare", "Kick", "Hi-Hat", "Bass"])
+        self.drumsCombo.addItems(["Snare", "Kick", "Hi-Hat", "Tom", "Crash"])
         self.drumsCombo.setVisible(False)
         self.optionsLayout.addWidget(self.drumsCombo)
         self.optionsInstrumentCombo.currentTextChanged.connect(self.instrumentComboChanged)
+
+        # self.stepSlider = QSlider(Qt.Orientation.Vertical)
+        # self.stepSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        # self.stepSlider.setPageStep(1)
+        # self.stepSlider.setSingleStep(1)
+        # self.stepSlider.setMinimum(0)
+        # self.stepSlider.setMaximum(16)
+        # self.stepSlider.setTickInterval(1)
+        # self.stepSlider.setMaximumWidth(16)
+        # self.barLayout.addWidget(self.stepSlider)
+        # self.stepLabel = QLabel("step")
+        # self.barLayout.addWidget(self.stepLabel)
+        # self.stepSlider.setVisible(False)
+
+        # self.shiftSlider = QSlider(Qt.Orientation.Vertical)
+        # self.shiftSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        # self.shiftSlider.setPageStep(0)
+        # self.shiftSlider.setSingleStep(1)
+        # self.shiftSlider.setMinimum(0)
+        # self.shiftSlider.setMaximum(self.stepSlider.value())
+        # self.shiftSlider.setTickInterval(1)
+        # self.shiftSlider.setMaximumWidth(self.stepSlider.value())
+        # self.barLayout.addWidget(self.shiftSlider)
+        # self.stepLabel = QLabel("step")
+        # self.barLayout.addWidget(self.stepLabel)
+        # self.shiftSlider.setVisible(False)
+        # self.drumsCombo.currentTextChanged.connect(self.drumsComboChanged)
+        # self.stepSlider.sliderPressed.connect(self.stepSliderChanged)
         self.optionsLayout.addWidget(QLabel("Instrument"))
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
+        for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
             self.optionsRuleCombo.addItem(rule)
         self.optionsRuleCombo.currentTextChanged.connect(self.ruleComboChanged)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
@@ -144,6 +172,8 @@ class MainWindow(QWidget):
             item.widget().currentText() for item in self.layoutItems(self.combineRuleRulesLayout) 
         ]
         options['percussion'] = self.drumsCombo.currentText()
+        # options['percussion_step'] = self.stepSlider.value()
+        # options['percussion_shift'] = self.shiftSlider.value()
 
         print(options)
         player = Player(options)
@@ -196,6 +226,12 @@ class MainWindow(QWidget):
             val = 1000 * 60 // bpm 
         self.setTimer(int(val) )
 
+        bpm = (1000 * 60) // val
+        self.speedLabel.setText(f"{bpm:0.0f} bpm ({int(val):0.0f} ms)"),
+        if bpm > 0:
+            val = 1000 * 60 // bpm 
+        self.setTimer(int(val) )
+
     def ruleComboChanged(self, rule):
         print(self.combineRuleLayout)
         if rule == "Combine":
@@ -211,6 +247,18 @@ class MainWindow(QWidget):
             self.drumsCombo.setVisible(True)
         else:
             self.drumsCombo.setVisible(False)
+
+    def drumsComboChanged(self, drum):
+        if drum:
+            self.stepSlider.setVisible(True)
+        else:
+            self.stepSlider.setVisible(False)
+
+    def stepSliderChanged(self, step_slider):
+        if step_slider:
+            self.shiftSlider.setVisible(True)
+        else:
+            self.shiftSlider.setVisible(False)
 
     def step(self):
         for player in self.players:
