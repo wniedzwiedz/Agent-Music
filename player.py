@@ -9,6 +9,7 @@ from board import *
 from rule import *
 from ChordMelodyRule import *
 from RepetetiveChordRule import *
+from PercussionRules import *
 
 from external import fluidsynth
 
@@ -105,7 +106,7 @@ class Player(Canvas):
         if name == "Increase":
             return IncreaseRule(base_key=20)
         if name == "Every Nth":
-            return EveryNthRule(drum=self.options['percussion'], step=2, shift=0)
+            return EveryNthRule(drum_name=self.options['percussion'], step=2, shift=0)
                 # step=self.options['percussion_step'], shift=self.options['percussion_shift'])
         elif name == "Chord Melody":
             return ChordMelodyRule(root_key=self.options['rootKey'],
@@ -115,8 +116,8 @@ class Player(Canvas):
             return RepetetiveChordRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],
                             octave=self.options['octave'],
-                            chords_num=6,
-                            length=5)
+                            chords_num=8,
+                            length=4)
         elif name == "Elementary":
             return ElemCARule(base_key=35, width=7, rule=163)
         elif name == "AB":

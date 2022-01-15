@@ -113,7 +113,7 @@ class MainWindow(QWidget):
         self.layoutSetChildrenVisible(self.drumsOptionsLayout, False)
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
+        for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB','Every Nth', 'Combine']:
             self.optionsRuleCombo.addItem(rule)
         self.optionsRuleCombo.currentTextChanged.connect(self.ruleComboChanged)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
@@ -244,6 +244,24 @@ class MainWindow(QWidget):
         print(instrument)
         if instrument == "Drums":
             self.layoutSetChildrenVisible(self.drumsOptionsLayout, True)
+            self.drumsCombo.setVisible(True)
+            self.optionsRuleCombo.clear()
+            self.optionsRuleCombo.addItem('Every Nth')
+        else:
+            self.drumsCombo.setVisible(False)
+            self.optionsRuleCombo.clear()
+            for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
+                self.optionsRuleCombo.addItem(rule)
+
+    def drumsComboChanged(self, drum):
+        if drum:
+            self.stepSlider.setVisible(True)
+        else:
+            self.stepSlider.setVisible(False)
+
+    def stepSliderChanged(self, step_slider):
+        if step_slider:
+            self.shiftSlider.setVisible(True)
         else:
             self.layoutSetChildrenVisible(self.drumsOptionsLayout, False)
 
