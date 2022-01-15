@@ -9,6 +9,20 @@ from functools import partial
 
 from player import *
 
+RULES = [
+    'Repetitive Chords', 
+    'Increase', 
+    'Elementary', 
+    'Chord Melody', 
+    'AB',
+    'Every Nth', 
+    'Combine'
+]
+
+DRUM_RULES = [
+    'Every Nth'
+]
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -113,8 +127,7 @@ class MainWindow(QWidget):
         self.layoutSetChildrenVisible(self.drumsOptionsLayout, False)
         
         self.optionsRuleCombo = QComboBox()
-        for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB','Every Nth', 'Combine']:
-            self.optionsRuleCombo.addItem(rule)
+        self.optionsRuleCombo.addItems(RULES)
         self.optionsRuleCombo.currentTextChanged.connect(self.ruleComboChanged)
         self.optionsLayout.addWidget(self.optionsRuleCombo)
         self.optionsLayout.addWidget(QLabel("Rule"))
@@ -225,12 +238,6 @@ class MainWindow(QWidget):
             val = 1000 * 60 // bpm 
         self.setTimer(int(val) )
 
-        bpm = (1000 * 60) // val
-        self.speedLabel.setText(f"{bpm:0.0f} bpm ({int(val):0.0f} ms)"),
-        if bpm > 0:
-            val = 1000 * 60 // bpm 
-        self.setTimer(int(val) )
-
     def ruleComboChanged(self, rule):
         print(self.combineRuleLayout)
         if rule == "Combine":
@@ -244,26 +251,12 @@ class MainWindow(QWidget):
         print(instrument)
         if instrument == "Drums":
             self.layoutSetChildrenVisible(self.drumsOptionsLayout, True)
-            self.drumsCombo.setVisible(True)
             self.optionsRuleCombo.clear()
-            self.optionsRuleCombo.addItem('Every Nth')
-        else:
-            self.drumsCombo.setVisible(False)
-            self.optionsRuleCombo.clear()
-            for rule in ['Repetitive Chords', 'Increase', 'Elementary', 'Chord Melody', 'AB', 'Combine']:
-                self.optionsRuleCombo.addItem(rule)
-
-    def drumsComboChanged(self, drum):
-        if drum:
-            self.stepSlider.setVisible(True)
-        else:
-            self.stepSlider.setVisible(False)
-
-    def stepSliderChanged(self, step_slider):
-        if step_slider:
-            self.shiftSlider.setVisible(True)
+            self.optionsRuleCombo.addItems(DRUM_RULES)
         else:
             self.layoutSetChildrenVisible(self.drumsOptionsLayout, False)
+            self.optionsRuleCombo.clear()
+            self.optionsRuleCombo.addItems(RULES)
 
     def step(self):
         for player in self.players:
