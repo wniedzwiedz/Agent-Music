@@ -112,7 +112,12 @@ class MainWindow(QWidget):
         self.drumsStepSlider.setMaximum(16)
         self.drumsStepSlider.setTickInterval(1)
         self.drumsOptionsLayout.addWidget(self.drumsStepSlider)
-        self.drumsOptionsLayout.addWidget(QLabel("Step"))
+        self.drumStepLabel = QLabel(f"Step {self.drumsStepSlider.value()}")
+        self.drumsOptionsLayout.addWidget(self.drumStepLabel)
+        self.drumsStepSlider.valueChanged.connect(
+                lambda v : 
+                self.drumStepLabel.setText(f"Step ({self.drumsStepSlider.value()})")
+        )
 
         self.drumsShiftSlider = QSlider(Qt.Orientation.Horizontal)
         self.drumsShiftSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
@@ -122,7 +127,12 @@ class MainWindow(QWidget):
         self.drumsShiftSlider.setMaximum(16)
         self.drumsShiftSlider.setTickInterval(1)
         self.drumsOptionsLayout.addWidget(self.drumsShiftSlider)
-        self.drumsOptionsLayout.addWidget(QLabel("Shift"))
+        self.drumsShiftLabel = QLabel(f"Shift ({self.drumsShiftSlider.value()})")
+        self.drumsOptionsLayout.addWidget(self.drumsShiftLabel)
+        self.drumsShiftSlider.valueChanged.connect(
+                lambda v : 
+                self.drumsShiftLabel.setText(f"Shift ({self.drumsShiftSlider.value()})")
+        )
 
         self.layout.addLayout(self.drumsOptionsLayout)
         self.layoutSetChildrenVisible(self.drumsOptionsLayout, False)
@@ -170,7 +180,12 @@ class MainWindow(QWidget):
         self.repetitiveChordsNumberSlider.setMaximum(16)
         self.repetitiveChordsNumberSlider.setTickInterval(1)
         self.repetitiveRuleLayout.addWidget(self.repetitiveChordsNumberSlider)
-        self.repetitiveRuleLayout.addWidget(QLabel("Number"))
+        self.repetitiveChordsNumberLabel = QLabel(f"Number ({self.repetitiveChordsNumberSlider.value()})")
+        self.repetitiveRuleLayout.addWidget(self.repetitiveChordsNumberLabel)
+        self.repetitiveChordsNumberSlider.valueChanged.connect(
+                lambda v:
+                self.repetitiveChordsNumberLabel.setText(f"Number ({self.repetitiveChordsNumberSlider.value()})")
+        )
 
         self.repetitiveChordsLengthSlider = QSlider(Qt.Orientation.Horizontal)
         self.repetitiveChordsLengthSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
@@ -180,7 +195,12 @@ class MainWindow(QWidget):
         self.repetitiveChordsLengthSlider.setMaximum(16)
         self.repetitiveChordsLengthSlider.setTickInterval(1)
         self.repetitiveRuleLayout.addWidget(self.repetitiveChordsLengthSlider)
-        self.repetitiveRuleLayout.addWidget(QLabel("Length"))
+        self.repetitiveChordsLengthLabel = QLabel(f"Length ({self.repetitiveChordsLengthSlider.value()})")
+        self.repetitiveRuleLayout.addWidget(self.repetitiveChordsLengthLabel)
+        self.repetitiveChordsLengthSlider.valueChanged.connect(
+                lambda v:
+                self.repetitiveChordsLengthLabel.setText(f"Length ({self.repetitiveChordsLengthSlider.value()})")
+        )
 
         if self.optionsRuleCombo.currentText() != "Repetitive Chords":
             self.layoutSetChildrenVisible(self.repetitiveRuleLayout, False)
