@@ -106,8 +106,10 @@ class Player(Canvas):
         if name == "Increase":
             return IncreaseRule(base_key=20)
         if name == "Every Nth":
-            return EveryNthRule(drum_name=self.options['percussion'], step=2, shift=0)
-                # step=self.options['percussion_step'], shift=self.options['percussion_shift'])
+            return EveryNthRule(
+                drum_name=self.options['percussion'], 
+                step=self.options['percussion_step'], 
+                shift=self.options['percussion_shift'])
         elif name == "Chord Melody":
             return ChordMelodyRule(root_key=self.options['rootKey'],
                             scale=self.options['scale'],

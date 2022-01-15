@@ -111,7 +111,7 @@ class MainWindow(QWidget):
         self.drumsStepSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.drumsStepSlider.setPageStep(1)
         self.drumsStepSlider.setSingleStep(1)
-        self.drumsStepSlider.setMinimum(0)
+        self.drumsStepSlider.setMinimum(1)
         self.drumsStepSlider.setMaximum(16)
         self.drumsStepSlider.setTickInterval(1)
         self.drumsOptionsLayout.addWidget(self.drumsStepSlider)
