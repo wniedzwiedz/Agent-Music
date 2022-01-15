@@ -41,9 +41,59 @@ class CombineRule(Rule):
 
 	def evaluate(self, notes, current_index):
 		self.my_notes = []
-		value=0
 		for rule in self.rules:
 			tmp_notes = rule.evaluate(notes,current_index)
 			for note in tmp_notes:
 				self.my_notes.append(Cell(note.key))
 		return self.my_notes
+
+class RandomRythmRule(PercussionRule):
+	def __init__(self, drum_name, spacing, error):
+		self.drum_key = RandomRythmRule.getDrumKey(drum_name)
+		self.seq_length = random.randint(1,4)
+		self.seq_dens = random.randint(1,4)
+		self.spacing = spacing
+		self.error = error
+		self.len_cnt = 0
+		self.my_notes = []
+
+	def checkDistance(notes, current_index, distance):
+		if distance == 1:
+			return True
+		else:
+			for i in range(1, distance):
+				if current_index - i <= 0:
+					return True
+				elif notes[current_index - i]:
+					return False
+			return True
+
+	def evaluate(self, notes, current_index):
+		self.my_notes = []
+		miss = random.randint(0,100)
+		new_seq = random.randint(0,100)
+		new_dens = random.randint(0,100)
+		if miss > 80:
+			self.len_cnt += 1
+			return self.my_notes
+		elif new_seq < 7 or self.len_cnt == self.seq_length:
+			self.seq_length = random.randint(1,4)
+			self.seq_dens = random.randint(1,4)
+			self.len_cnt = 0
+		elif new_dens < self.error * 3:
+			if RandomRythmRule.checkDistance(notes, current_index, self.seq_dens):
+				self.my_notes.append(Cell(self.drum_key))
+				return self.my_notes
+		elif self.len_cnt == 0:
+			self.my_notes.append(Cell(self.drum_key)) 
+			self.len_cnt += 1
+			return self.my_notes
+
+		#Every other case
+		if RandomRythmRule.checkDistance(notes, current_index, self.spacing):
+			self.my_notes.append(Cell(self.drum_key))
+			self.len_cnt += 1 
+			return self.my_notes
+		else:
+			self.len_cnt += 1
+			return self.my_notes

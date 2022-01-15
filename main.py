@@ -11,16 +11,19 @@ from player import *
 
 RULES = [
     'Repetitive Chords', 
+    'Chord Melody',
+    'Top Melody',
+    'Arpeggio',
     'Increase', 
-    'Elementary', 
-    'Chord Melody', 
+    'Elementary',
     'AB',
-    'Every Nth', 
-    'Combine'
+    'Every Nth'
 ]
 
 DRUM_RULES = [
-    'Every Nth'
+    'Every Nth',
+    'Random Rythm',
+    'Combine'
 ]
 
 class MainWindow(QWidget):
@@ -118,8 +121,11 @@ class MainWindow(QWidget):
         self.drumStepLabel = QLabel(f"Step {self.drumsStepSlider.value()}")
         self.drumsOptionsLayout.addWidget(self.drumStepLabel)
         self.drumsStepSlider.valueChanged.connect(
-                lambda v : 
-                self.drumStepLabel.setText(f"Step ({self.drumsStepSlider.value()})")
+                lambda v :
+                    # if self.optionsRuleCombo.currentText() == "Random Rythm":
+                    #     self.drumStepLabel = QLabel(f"Spacing {self.drumsStepSlider.value()}")
+                    # else: 
+                    self.drumStepLabel.setText(f"Step ({self.drumsStepSlider.value()})")
         )
 
         self.drumsShiftSlider = QSlider(Qt.Orientation.Horizontal)
@@ -134,7 +140,11 @@ class MainWindow(QWidget):
         self.drumsOptionsLayout.addWidget(self.drumsShiftLabel)
         self.drumsShiftSlider.valueChanged.connect(
                 lambda v : 
-                self.drumsShiftLabel.setText(f"Shift ({self.drumsShiftSlider.value()})")
+                    # if self.optionsRuleCombo.currentText() == "Random Rythm":
+                    #     self.drumShiftLabel = QLabel(f"Error {self.drumsStepSlider.value() * 10}")
+                    #     self.drumsShiftSlider.setMaximum(10)
+                    # else:
+                    self.drumsShiftLabel.setText(f"Shift ({self.drumsShiftSlider.value()})")
         )
 
         self.layout.addLayout(self.drumsOptionsLayout)
@@ -155,17 +165,17 @@ class MainWindow(QWidget):
         # add the same rules to Combine Rule Options
         combineRuleRemoveRule = QPushButton("-")
         combineRuleRemoveRule.setMaximumSize(QSize(24, 24))
-        combineRuleRemoveRule.clicked.connect(lambda :  
-            self.removeLastItem(self.combineRuleRulesLayout)
-        )
+        combineRuleRemoveRule.clicked.connect(self.removeLastItem)
+
         self.combineRuleLayout.addWidget(combineRuleRemoveRule)
         combineRuleAddRule = QPushButton("+")
         combineRuleAddRule.setMaximumSize(QSize(24, 24))
-        combineRuleAddRule.clicked.connect(lambda :  
-            self.combineRuleRulesLayout.addWidget(self.copyCombo(self.optionsRuleCombo))
-        )
+        combineRuleAddRule.clicked.connect(self.saveCombineOptions)
+
         self.combineRuleLayout.addWidget(combineRuleAddRule)
         self.combineRuleRulesCombo = self.copyCombo(self.optionsRuleCombo)
+        self.combineRuleRulesCombo.clear()
+        self.combineRuleRulesCombo.addItems(DRUM_RULES[0:-1])
         self.combineRuleRulesLayout.addWidget(self.combineRuleRulesCombo)
 
         # if default (current) option is not "Combine"
@@ -210,6 +220,7 @@ class MainWindow(QWidget):
         self.layout.addLayout(self.repetitiveRuleLayout)
 
         # Audio players
+        self.combine_options = []
         self.players = []
         addButton = QPushButton("Add")
         addButton.clicked.connect(self.createPlayer)
@@ -222,17 +233,13 @@ class MainWindow(QWidget):
         self.timer.stop()
         self.speedSliderChanged()
 
-
-    def createPlayer(self):
+    def createPlayer(self):            
         options = {}
         options['rootKey'] = self.optionsRootKeyCombo.currentText()
         options['scale'] = self.optionsScaleCombo.currentText()
         options['octave'] = self.optionsOctaveCombo.currentText()
         options['instrument'] = self.optionsInstrumentCombo.currentText()
         options['rule'] = self.optionsRuleCombo.currentText()
-        options['rules'] = [ 
-            item.widget().currentText() for item in self.layoutItems(self.combineRuleRulesLayout) 
-        ]
         options['percussion'] = self.drumsCombo.currentText()
         options['percussion_step'] = self.drumsStepSlider.value()
         options['percussion_shift'] = self.drumsShiftSlider.value()
@@ -242,7 +249,8 @@ class MainWindow(QWidget):
         options['hold_notes'] = self.holdNotesCheckbox.isChecked()
 
         print(options)
-        player = Player(options)
+        player = Player(options, self.combine_options)
+        self.combine_options = []
         self.players.append(player)
         removeButton = QPushButton("Remove")
 
@@ -260,6 +268,24 @@ class MainWindow(QWidget):
         self.layout.addWidget(removeButton)
         self.layout.addWidget(player)
 
+    def saveCombineOptions(self):
+        options = {}
+        # options['rootKey'] = self.optionsRootKeyCombo.currentText()
+        # options['scale'] = self.optionsScaleCombo.currentText()
+        # options['octave'] = self.optionsOctaveCombo.currentText()
+        options['instrument'] = self.optionsInstrumentCombo.currentText()
+        options['rule'] = self.optionsRuleCombo.currentText()
+        options['combine_rule'] = self.combineRuleRulesCombo.currentText() 
+        options['percussion'] = self.drumsCombo.currentText()
+        options['percussion_step'] = self.drumsStepSlider.value()
+        options['percussion_shift'] = self.drumsShiftSlider.value()
+
+        # options['repetitive_number'] = self.repetitiveChordsNumberSlider.value()
+        # options['repetitive_length'] = self.repetitiveChordsLengthSlider.value()
+        options['hold_notes'] = self.holdNotesCheckbox.isChecked()
+
+        print(options)
+        self.combine_options.append(options)
 
     def setTimer(self, ms):
         if not self.timer:
@@ -333,14 +359,11 @@ class MainWindow(QWidget):
             if ch.widget():
                 ch.widget().setVisible(visible)
 
-    def removeLastItem(self, layout):
-        if layout.count() <= 0:
-            return
-
-        item = layout.itemAt(layout.count() - 1)
-        if item.widget():
-            item.widget().deleteLater()
-        layout.removeItem(item)
+    def removeLastItem(self):
+        if self.combine_options:
+            self.combine_options.pop()
+        else:
+            self.combine_options = []
 
     def layoutItems(self, layout):
         items = []

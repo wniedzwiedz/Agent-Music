@@ -2,15 +2,13 @@ import random
 from cell import *
 from rule import *
 
-class ChordMelodyRule():
+class TopMelodyRule():
 	def __init__(self, root_key, scale, octave):
 		self.keys_list = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 		self.octave = int(octave)
-		self.root_key = ChordMelodyRule.getRoot(root_key,self.octave,self.keys_list)
-		self.scale = ChordMelodyRule.getScale(scale)
+		self.root_key = TopMelodyRule.getRoot(root_key,self.octave,self.keys_list)
+		self.scale = TopMelodyRule.getScale(scale)
 		self.my_notes = []
-		self.chord_length = 0
-		self.chord_length_counter = 0
 
 	def getRoot(name, octave, keys_list):
 		root = 60 + 12*octave + keys_list.index(name)
@@ -38,26 +36,43 @@ class ChordMelodyRule():
 
 	def evaluate(self, notes, current_index):
 		self.my_notes = []
+		miss = random.randint(0,100)
+		double = random.randint(0,100)
+		harmony = random.randint(0,100)
 		# First chord root in octave
 		if current_index % 32 == 0 or len(notes) == 0:
 			rnd = random.randint(0,6)
-			self.chord_length = random.randint(2,8)
-			self.chord_length_counter = 1
-			for i in range(rnd, rnd + 6, 2):
-				self.my_notes.append(Cell(ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,i)))
+			self.my_notes.append(Cell(TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)))
 			return self.my_notes
-		elif self.chord_length_counter % self.chord_length == 0:
-			self.chord_length_counter = 1
-			rnd = random.randint(-2, 6)
-			self.chord_length = random.randint(1,3)
-			previous = notes[current_index - 1]
-			previous_root = previous[0].key
-			while ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd) == previous_root:
-				rnd = random.randint(-2, 6)
-			for i in range(rnd, rnd + 6, 2):
-				self.my_notes.append(Cell(ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,i)))
+
+		elif miss > 60:
 			return self.my_notes
-		else:
-			self.chord_length_counter += 1
+
+		elif double < 20:
 			self.my_notes = notes[current_index - 1]
 			return self.my_notes
+
+		else:
+			previous = notes[current_index - 1]
+			if previous:
+				previous_root = previous[0].key
+				rnd = random.randint(0,6)
+				if harmony > 20:
+					tmp_key = TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					while abs(tmp_key - previous_root) > 5 or abs(tmp_key - previous_root) == 0:
+						rnd = random.randint(0, 6)
+						tmp_key = TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					self.my_notes.append(Cell(TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)))
+					return self.my_notes
+				else:
+					tmp_key = TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					while abs(tmp_key - previous_root) == 0:
+						rnd = random.randint(0, 6)
+						tmp_key = TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					self.my_notes.append(Cell(TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)))
+					return self.my_notes
+			else:
+				rnd = random.randint(0,6)
+				self.my_notes.append(Cell(TopMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd)))
+				return self.my_notes
+

@@ -10,6 +10,8 @@ from rule import *
 from ChordMelodyRule import *
 from RepetetiveChordRule import *
 from PercussionRules import *
+from TopMelodyRule import *
+from ArpeggioRule import *
 
 from external import fluidsynth
 
@@ -26,15 +28,16 @@ class Player(Canvas):
             'Drums': "soundfonts/GoldDrums.sf2"
     }
 
-    def __init__(self, options):
+    def __init__(self, options, combine_options):
         super().__init__()
         print(f"Creating Player with {options}..")
         self.options = options
+        self.combine_options = combine_options
         self.stepCounter = 0
         if not "rule" in options:
             raise Exception("Rule not specified!")
 
-        rule = self.getRule(options.get("rule"), options)
+        rule = self.getRule(self.options.get("rule"), self.options)
 
         if not rule:
             raise Exception("Specified rule not found!")
@@ -105,30 +108,60 @@ class Player(Canvas):
     def getRule(self, name, options):
         if name == "Increase":
             return IncreaseRule(base_key=20)
-        if name == "Every Nth":
-            return EveryNthRule(
-                drum_name=self.options['percussion'], 
-                step=self.options['percussion_step'], 
-                shift=self.options['percussion_shift'])
+
         elif name == "Chord Melody":
-            return ChordMelodyRule(root_key=self.options['rootKey'],
-                            scale=self.options['scale'],
-                            octave=self.options['octave'])
+            return ChordMelodyRule(root_key=options['rootKey'],
+                            scale=options['scale'],
+                            octave=options['octave'])
+
         elif name == "Repetitive Chords":
-            return RepetetiveChordRule(root_key=self.options['rootKey'],
-                            scale=self.options['scale'],
-                            octave=self.options['octave'],
-                            chords_num=8,
-                            length=4)
+            return RepetetiveChordRule(root_key=options['rootKey'],
+                            scale=options['scale'],
+                            octave=options['octave'],
+                            chords_num=options['repetitive_number'],
+                            length=options['repetitive_length'])
+
+        elif name == "Arpeggio":
+            return ArpeggioRule(root_key=options['rootKey'],
+                            scale=options['scale'],
+                            octave=options['octave'],
+                            chords_num=8, #options['repetitive_number'],
+                            length=4) #options['repetitive_length'])
+
+        elif name == "Top Melody":
+            return TopMelodyRule(root_key=options['rootKey'],
+                            scale=options['scale'],
+                            octave=options['octave'])
+
         elif name == "Elementary":
             return ElemCARule(base_key=35, width=7, rule=163)
+
         elif name == "AB":
             return ABRule(base_key=44)
-        elif name == "Combine":
-            rules = [ self.getRule(rn, options) for rn in options["rules"] ]
-            return CombineRule(rules)
 
-        return None
+        elif name == "Every Nth":
+            return EveryNthRule(
+                drum_name=options['percussion'], 
+                step=options['percussion_step'], 
+                shift=options['percussion_shift'])
+
+        elif name == "Random Rythm":
+            return RandomRythmRule(
+                drum_name=options['percussion'],
+                spacing=options['percussion_step'], 
+                error=options['percussion_shift'])
+
+        elif name == "Combine":
+            if self.combine_options:
+                rules = []
+                for options_list in self.combine_options:
+                    rules.append(self.getRule(options_list['combine_rule'], options_list))
+                return CombineRule(rules)
+            else:
+                return None # Można by dodać jakiś warning, a nie wywalanie programu - to się dzieje, gdy już dodamy zkombajnowane instrumenty, a nie dodamy nic nowego do listy, więc jest pusta
+
+        else:
+            return None
 
     def mousePressEvent(self, event: QMouseEvent):
         cellX, cellY = self.getCellWindowPosition(event.position().x(), event.position().y())
