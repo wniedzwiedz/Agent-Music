@@ -43,6 +43,7 @@ class MainWindow(QWidget):
         self.layout.addLayout(self.combineRuleLayout)
         self.combineRuleRulesLayout = QHBoxLayout()
         self.drumsOptionsLayout = QHBoxLayout()
+        self.repetitiveRuleLayout = QHBoxLayout()
 
         # Bar & Buttons 
         print("Creating buttons...")
@@ -159,6 +160,32 @@ class MainWindow(QWidget):
             self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
             self.layoutSetChildrenVisible(self.combineRuleLayout, False)
 
+        # Repetitive rule options
+        self.repetitiveRuleLayout.addWidget(QLabel("Repetitive rule options:"))
+        self.repetitiveChordsNumberSlider = QSlider(Qt.Orientation.Horizontal)
+        self.repetitiveChordsNumberSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.repetitiveChordsNumberSlider.setPageStep(1)
+        self.repetitiveChordsNumberSlider.setSingleStep(1)
+        self.repetitiveChordsNumberSlider.setMinimum(0)
+        self.repetitiveChordsNumberSlider.setMaximum(16)
+        self.repetitiveChordsNumberSlider.setTickInterval(1)
+        self.repetitiveRuleLayout.addWidget(self.repetitiveChordsNumberSlider)
+        self.repetitiveRuleLayout.addWidget(QLabel("Number"))
+
+        self.repetitiveChordsLengthSlider = QSlider(Qt.Orientation.Horizontal)
+        self.repetitiveChordsLengthSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.repetitiveChordsLengthSlider.setPageStep(1)
+        self.repetitiveChordsLengthSlider.setSingleStep(1)
+        self.repetitiveChordsLengthSlider.setMinimum(0)
+        self.repetitiveChordsLengthSlider.setMaximum(16)
+        self.repetitiveChordsLengthSlider.setTickInterval(1)
+        self.repetitiveRuleLayout.addWidget(self.repetitiveChordsLengthSlider)
+        self.repetitiveRuleLayout.addWidget(QLabel("Length"))
+
+        if self.optionsRuleCombo.currentText() != "Repetitive Chords":
+            self.layoutSetChildrenVisible(self.repetitiveRuleLayout, False)
+        self.layout.addLayout(self.repetitiveRuleLayout)
+
         # Audio players
         self.players = []
         addButton = QPushButton("Add")
@@ -186,6 +213,9 @@ class MainWindow(QWidget):
         options['percussion'] = self.drumsCombo.currentText()
         options['percussion_step'] = self.drumsStepSlider.value()
         options['percussion_shift'] = self.drumsShiftSlider.value()
+
+        options['repetitive_number'] = self.repetitiveChordsNumberSlider.value()
+        options['repetitive_length'] = self.repetitiveChordsLengthSlider.value()
 
         print(options)
         player = Player(options)
@@ -246,6 +276,11 @@ class MainWindow(QWidget):
         else:
             self.layoutSetChildrenVisible(self.combineRuleLayout, False)
             self.layoutSetChildrenVisible(self.combineRuleRulesLayout, False)
+
+        if rule == "Repetitive Chords":
+            self.layoutSetChildrenVisible(self.repetitiveRuleLayout, True)
+        else:
+            self.layoutSetChildrenVisible(self.repetitiveRuleLayout, False)
 
     def instrumentComboChanged(self, instrument):
         print(instrument)
