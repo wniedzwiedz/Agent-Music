@@ -63,7 +63,7 @@ class Player(Canvas):
         self.fs.program_select(0, sfid, bank, 0)
 
         self.fs.cc(0, 7, 127)
-        self.holdNotes = True
+        self.holdNotes = options.get("hold_notes", True)
 
 
     def __del__(self):

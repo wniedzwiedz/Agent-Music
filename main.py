@@ -86,8 +86,8 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Scale"))
 
         self.optionsOctaveCombo = QComboBox()
-        for octave in ['-5', '-4', '-3', '-2' ,'-1', '0', '1', '2', '3', '4', '5']:
-            self.optionsOctaveCombo.addItem(octave)
+        self.optionsOctaveCombo.addItems(['-5', '-4', '-3', '-2' ,'-1', '0', '1', '2', '3', '4', '5'])
+        self.optionsOctaveCombo.setCurrentText('0')
         self.optionsLayout.addWidget(self.optionsOctaveCombo)
         self.optionsLayout.addWidget(QLabel("Octave"))
         
@@ -96,6 +96,9 @@ class MainWindow(QWidget):
         self.optionsInstrumentCombo.addItems(Player.INSTRUMENTS.keys())
         self.optionsLayout.addWidget(self.optionsInstrumentCombo)
         self.optionsLayout.addWidget(QLabel("Instrument"))
+        self.holdNotesCheckbox = QCheckBox("Hold notes")
+        self.holdNotesCheckbox.setChecked(True)
+        self.optionsLayout.addWidget(self.holdNotesCheckbox)
 
         # Drums options
         self.drumsCombo = QComboBox()
@@ -236,6 +239,7 @@ class MainWindow(QWidget):
 
         options['repetitive_number'] = self.repetitiveChordsNumberSlider.value()
         options['repetitive_length'] = self.repetitiveChordsLengthSlider.value()
+        options['hold_notes'] = self.holdNotesCheckbox.isChecked()
 
         print(options)
         player = Player(options)
