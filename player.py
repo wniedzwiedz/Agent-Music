@@ -117,3 +117,8 @@ class Player(Canvas):
 
         return None
 
+    def mousePressEvent(self, event: QMouseEvent):
+        cellX, cellY = self.getCellWindowPosition(event.position().x(), event.position().y())
+        self.stepCounter = int(cellX)
+        print(cellX, cellY)
+
