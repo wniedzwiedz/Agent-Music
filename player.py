@@ -12,6 +12,7 @@ from RepetetiveChordRule import *
 from PercussionRules import *
 from TopMelodyRule import *
 from ArpeggioRule import *
+from FullMelodyRule import *
 
 from external import fluidsynth
 
@@ -109,6 +110,11 @@ class Player(Canvas):
         if name == "Increase":
             return IncreaseRule(base_key=20)
 
+        elif name == "Full Melody":
+            return FullMelodyRule(root_key=options['rootKey'],
+                            scale=options['scale'],
+                            octave=options['octave'])
+
         elif name == "Chord Melody":
             return ChordMelodyRule(root_key=options['rootKey'],
                             scale=options['scale'],
@@ -126,7 +132,7 @@ class Player(Canvas):
                             scale=options['scale'],
                             octave=options['octave'],
                             chords_num=8, #options['repetitive_number'],
-                            length=4) #options['repetitive_length'])
+                            length=6) #options['repetitive_length'])
 
         elif name == "Top Melody":
             return TopMelodyRule(root_key=options['rootKey'],

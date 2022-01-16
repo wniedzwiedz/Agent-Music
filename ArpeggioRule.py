@@ -39,10 +39,10 @@ class ArpeggioRule():
 
 	def evaluate(self, notes, current_index):
 		self.my_notes = []
-		rnd = random.randint(0,6)
-		self.chord = [rnd, rnd + 2, rnd + 4]
 		# First chord root in octave
 		if current_index == 0 or len(notes) == 0:
+			rnd = random.randint(0,6)
+			self.chord = [rnd, rnd + 2, rnd + 4]
 			self.my_notes.append(Cell(ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)))
 			return self.my_notes
 
@@ -51,31 +51,31 @@ class ArpeggioRule():
 			return self.my_notes
 
 		elif current_index % self.chord_length == 0:
-			if current_index % (self.n / 2) == (self.n / 2) - self.chord_length:
-				rnd = random.randint(-2, 8)
+			if current_index % 4 * self.chord_length == 0:
+				rnd = random.randint(0, 6)
 				praprevious = notes[current_index - 2 * self.chord_length]
 				praprevious_root = praprevious[0].key
 				previous = notes[current_index - self.chord_length]
 				previous_root = previous[0].key
 				tmp_key = ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				while abs(tmp_key - previous_root) > 5 or abs(tmp_key - previous_root) == 0 or abs(tmp_key - praprevious_root) == 0:
-					rnd = random.randint(-2, 8)
+					rnd = random.randint(0, 6)
 					tmp_key = ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				self.chord = [rnd, rnd + 2, rnd + 4]
 				self.my_notes.append(Cell(ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)))
 				return self.my_notes
 			else:
-				rnd = random.randint(-2, 8)
+				rnd = random.randint(0, 6)
 				previous = notes[current_index - self.chord_length]
 				previous_root = previous[0].key
 				tmp_key = ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				while abs(tmp_key - previous_root) > 2 or abs(tmp_key - previous_root) == 0:
-					rnd = random.randint(-2, 8)
+					rnd = random.randint(0, 6)
 					tmp_key = ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				self.chord = [rnd, rnd + 2, rnd + 4]
 				self.my_notes.append(Cell(ArpeggioRule.getKey(self.root_key,self.octave,self.scale,rnd)))
 				return self.my_notes
 
 		else:
-			self.my_notes.append(Cell(ArpeggioRule.getKey(self.root_key,self.octave,self.scale,self.chord[(current_index % self.chord_length) - 1])))
+			self.my_notes.append(Cell(ArpeggioRule.getKey(self.root_key,self.octave,self.scale,self.chord[(current_index % self.chord_length) % len(self.chord)])))
 			return self.my_notes

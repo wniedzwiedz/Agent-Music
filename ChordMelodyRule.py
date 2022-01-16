@@ -49,7 +49,7 @@ class ChordMelodyRule():
 		elif self.chord_length_counter % self.chord_length == 0:
 			self.chord_length_counter = 1
 			rnd = random.randint(-2, 6)
-			self.chord_length = random.randint(1,3)
+			self.chord_length = random.randint(2,6)
 			previous = notes[current_index - 1]
 			previous_root = previous[0].key
 			while ChordMelodyRule.getKey(self.root_key,self.octave,self.scale,rnd) == previous_root:

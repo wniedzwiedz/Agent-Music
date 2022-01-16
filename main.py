@@ -10,6 +10,7 @@ from functools import partial
 from player import *
 
 RULES = [
+    'Full Melody',
     'Repetitive Chords', 
     'Chord Melody',
     'Top Melody',
