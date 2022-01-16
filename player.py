@@ -8,7 +8,7 @@ from canvas import *
 from board import *
 from rule import *
 from ChordMelodyRule import *
-from RepetetiveChordRule import *
+from RepetitiveChordRule import *
 from PercussionRules import *
 from TopMelodyRule import *
 from ArpeggioRule import *
@@ -121,7 +121,7 @@ class Player(Canvas):
                             octave=options['octave'])
 
         elif name == "Repetitive Chords":
-            return RepetetiveChordRule(root_key=options['rootKey'],
+            return RepetitiveChordRule(root_key=options['rootKey'],
                             scale=options['scale'],
                             octave=options['octave'],
                             chords_num=options['repetitive_number'],

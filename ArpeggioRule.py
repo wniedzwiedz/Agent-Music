@@ -57,7 +57,7 @@ class ArpeggioRule():
 			return self.my_notes
 
 		elif current_index % self.chord_length == 0:
-			if current_index % 4 * self.chord_length == 0:
+			if ((current_index / self.chord_length) + 1) % 4 == 0:
 				rnd = random.randint(0, 6)
 				praprevious = notes[current_index - 2 * self.chord_length]
 				praprevious_root = praprevious[0].key

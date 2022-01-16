@@ -18,7 +18,6 @@ RULES = [
     'Increase', 
     'Elementary',
     'AB',
-    'Every Nth'
 ]
 
 DRUM_RULES = [

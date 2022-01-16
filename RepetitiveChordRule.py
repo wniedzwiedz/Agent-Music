@@ -2,12 +2,12 @@ import random
 from cell import *
 from rule import *
 
-class RepetetiveChordRule():
+class RepetitiveChordRule():
 	def __init__(self, root_key, scale, octave, chords_num, length):
 		self.keys_list = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 		self.octave = int(octave)
-		self.root_key = RepetetiveChordRule.getRoot(root_key,self.octave,self.keys_list)
-		self.scale = RepetetiveChordRule.getScale(scale)
+		self.root_key = RepetitiveChordRule.getRoot(root_key,self.octave,self.keys_list)
+		self.scale = RepetitiveChordRule.getScale(scale)
 		self.my_notes = []
 		self.n = chords_num * length
 		self.chord_length = length
@@ -48,7 +48,7 @@ class RepetetiveChordRule():
 		if current_index == 0 or len(notes) == 0:
 			rnd = random.randint(0,6)
 			for i in range(rnd, rnd + 6, 2):
-				self.my_notes.append(Cell(RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
+				self.my_notes.append(Cell(RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
 			return self.my_notes
 
 		elif current_index >= self.n:
@@ -56,29 +56,29 @@ class RepetetiveChordRule():
 			return self.my_notes
 
 		elif current_index % self.chord_length == 0:
-			if current_index % (4 * self.chord_length) == 0:
+			if ((current_index / self.chord_length) + 1) % 4 == 0:
 				rnd = random.randint(-2, 8)
 				praprevious = notes[current_index - (self.chord_length + 1)]
 				praprevious_root = praprevious[0].key
 				previous = notes[current_index - 1]
 				previous_root = previous[0].key
-				tmp_key = RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
+				tmp_key = RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				while abs(tmp_key - previous_root) > 5 or abs(tmp_key - previous_root) == 0 or abs(tmp_key - praprevious_root) == 0:
 					rnd = random.randint(-2, 8)
-					tmp_key = RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					tmp_key = RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				for i in range(rnd, rnd + 6, 2):
-					self.my_notes.append(Cell(RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
+					self.my_notes.append(Cell(RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
 				return self.my_notes
 			else:
 				rnd = random.randint(-2, 8)
 				previous = notes[current_index - 1]
 				previous_root = previous[0].key
-				tmp_key = RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
-				while abs(tmp_key - previous_root) > 2 or abs(tmp_key - previous_root) == 0:
+				tmp_key = RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
+				while abs(tmp_key - previous_root) > 4 or abs(tmp_key - previous_root) == 0:
 					rnd = random.randint(-2, 8)
-					tmp_key = RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
+					tmp_key = RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,rnd)
 				for i in range(rnd, rnd + 6, 2):
-					self.my_notes.append(Cell(RepetetiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
+					self.my_notes.append(Cell(RepetitiveChordRule.getKey(self.root_key,self.octave,self.scale,i)))
 				return self.my_notes
 
 		else:
