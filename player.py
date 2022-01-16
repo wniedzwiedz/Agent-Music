@@ -44,7 +44,7 @@ class Player(Canvas):
             raise Exception("Specified rule not found!")
 
         board = Board()
-        board.generateCells(100, rule)
+        board.generateCells(96, rule)
         self.setBoard(board)
 
         self.fs = fluidsynth.Synth()

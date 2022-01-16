@@ -21,6 +21,12 @@ class FullMelodyRule():
 			scale_rule=[0,2,4,5,7,9,11]
 		elif name=='minor':
 			scale_rule=[0,2,3,5,7,8,10]
+		elif name=='Dorian':
+			scale_rule=[0,2,3,5,7,9,10]
+		elif name=='Phrygian':
+			scale_rule=[0,1,3,5,7,8,10]
+		elif name=='Harmonic':
+			scale_rule=[0,2,3,5,7,8,11]
 		else:
 			scale_rule=[]
 		return scale_rule

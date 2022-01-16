@@ -84,7 +84,7 @@ class MainWindow(QWidget):
         self.optionsLayout.addWidget(QLabel("Root key"))
 
         self.optionsScaleCombo = QComboBox()
-        for scale in ['Major', 'minor']:
+        for scale in ['Major', 'minor', 'Phrygian', 'Dorian', 'Harmonic']:
             self.optionsScaleCombo.addItem(scale)
         self.optionsLayout.addWidget(self.optionsScaleCombo)
         self.optionsLayout.addWidget(QLabel("Scale"))
@@ -141,10 +141,6 @@ class MainWindow(QWidget):
         self.drumsOptionsLayout.addWidget(self.drumsShiftLabel)
         self.drumsShiftSlider.valueChanged.connect(
                 lambda v : 
-                    # if self.optionsRuleCombo.currentText() == "Random Rythm":
-                    #     self.drumShiftLabel = QLabel(f"Error {self.drumsStepSlider.value() * 10}")
-                    #     self.drumsShiftSlider.setMaximum(10)
-                    # else:
                     self.drumsShiftLabel.setText(f"Shift ({self.drumsShiftSlider.value()})")
         )
 
@@ -190,7 +186,7 @@ class MainWindow(QWidget):
         self.repetitiveChordsNumberSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.repetitiveChordsNumberSlider.setPageStep(1)
         self.repetitiveChordsNumberSlider.setSingleStep(1)
-        self.repetitiveChordsNumberSlider.setMinimum(0)
+        self.repetitiveChordsNumberSlider.setMinimum(1)
         self.repetitiveChordsNumberSlider.setMaximum(16)
         self.repetitiveChordsNumberSlider.setTickInterval(1)
         self.repetitiveRuleLayout.addWidget(self.repetitiveChordsNumberSlider)
@@ -205,7 +201,7 @@ class MainWindow(QWidget):
         self.repetitiveChordsLengthSlider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.repetitiveChordsLengthSlider.setPageStep(1)
         self.repetitiveChordsLengthSlider.setSingleStep(1)
-        self.repetitiveChordsLengthSlider.setMinimum(0)
+        self.repetitiveChordsLengthSlider.setMinimum(1)
         self.repetitiveChordsLengthSlider.setMaximum(16)
         self.repetitiveChordsLengthSlider.setTickInterval(1)
         self.repetitiveRuleLayout.addWidget(self.repetitiveChordsLengthSlider)
